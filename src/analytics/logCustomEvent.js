@@ -12,11 +12,15 @@ import {isString} from '@janiscommerce/apps-helpers'
 
 const logCustomEvent = async (eventName,dataEvent) => {
 
-    if(!eventName || !isString(eventName)) throw new Error('Event name is required');
+    try {
+        if(!eventName || !isString(eventName)) throw new Error('Event name is required');
 
-    if(!dataEvent || !Object.keys(dataEvent).length) throw new Error('Event data is required');
-
-    await analytics().logEvent(eventName,dataEvent)
+        if(!dataEvent || !Object.keys(dataEvent).length) throw new Error('Event data is required');
+    
+        await analytics().logEvent(eventName,dataEvent)
+    } catch (error) {
+        console.log('custom_Event: ', error)
+    }
 }
 
 export default logCustomEvent;

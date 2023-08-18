@@ -10,11 +10,15 @@ import {isString} from '@janiscommerce/apps-helpers'
 
 const logOutEvent = async (methodMessage) => {
 
-    const message = isString(methodMessage) ? methodMessage : 'manual_logout'
+    try {
+        const message = isString(methodMessage) ? methodMessage : 'manual_logout'
 
-    await analytics().logEvent('logOut',{
-        method: message
-    })
+        await analytics().logEvent('logOut',{
+            method: message
+     })
+    } catch (error) {
+        console.log('log_out error:', error)
+    }
 }
 
 export default logOutEvent;

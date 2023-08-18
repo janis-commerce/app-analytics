@@ -45,8 +45,6 @@ buck-out/
 # npm config
 .npmrc
 
-react-native.config.js
-
 #build
 dist/
 

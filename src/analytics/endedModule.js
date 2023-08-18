@@ -14,16 +14,21 @@ import {isString, isObject} from '@janiscommerce/apps-helpers'
 
 const endedModule = async (params) => {
 
-    if(!params || !isObject(params)) throw new Error('Params are required')
+    try {
+        if(!params || !isObject(params)) throw new Error('Params are required')
 
-    const {moduleName, ...props} = params
-
-    if(!moduleName || !isString(moduleName)) throw new Error('Module name is required')
-
-    await analytics().logEvent('module_start', {
-        module: moduleName,
-        ...props,
-    })
+        const {moduleName, ...props} = params
+    
+        if(!moduleName || !isString(moduleName)) throw new Error('Module name is required')
+    
+        await analytics().logEvent('module_start', {
+            module: moduleName,
+            ...props,
+        })
+    } catch(error) {
+        console.log('ended_module_error:', error)
+    }
+   
 }
 
 export default endedModule;

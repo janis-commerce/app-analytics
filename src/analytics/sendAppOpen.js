@@ -7,7 +7,12 @@ import analytics from "@react-native-firebase/analytics";
  */
 
 const sendAppOpen = async () => {
-    await analytics().logAppOpen()
+    try {
+        await analytics().logAppOpen()
+    }
+    catch (error) {
+        console.log('app_open_error', error)
+    }
 }
 
 export default sendAppOpen;

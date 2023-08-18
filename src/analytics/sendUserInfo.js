@@ -1,5 +1,5 @@
 import analytics from '@react-native-firebase/analytics'
-import {isObject,isString} from '@janiscommerce/apps-helpers'
+import {isObject,isString, promiseWrapper} from '@janiscommerce/apps-helpers'
 
 /**
  * @name sendUserInfo
@@ -12,16 +12,16 @@ import {isObject,isString} from '@janiscommerce/apps-helpers'
  * @param {string} params.osVersion version of the model
  * @param {string} params.userName 
  * @param {string} params.userId
- * @throws an error when not pass appName or appVersion
+ * @throws an error when not pass valid params
  * @example sendUserInfo({appName:'app_name',appVersion:'1.0.0',device:'samsung a10',os:'android',osVersion:'10',userName:'user_name',userId:'012345678910'})
  */
 
 const sendUserInfo = async (params) => {
-
+    try {      
     if(!params || !isObject(params)) 
-        throw new Error('Params are required')
+    throw new Error('Params are required')
     
-    const {appName,appVersion,device,os,osVersion,userName,userId, ...props} = params;
+    const {appName,appVersion,device,os,osVersion,userName,userId,language, ...props} = params;
 
     const validAppName = appName && isString(appName);
     const validAppVersion = appVersion && isString(appVersion);
@@ -31,21 +31,26 @@ const sendUserInfo = async (params) => {
     const validOSinfo = validOS && validOSVersion
     const validUserName = userName && isString(userName);
     const validUserID = userId && isString(userId);
-
-    if(!validAppName) throw new Error('App name is required');
-    if(!validAppVersion) throw new Error('App version is required');
+    const validLanguage = language && isString(language);
 
     const eventData = {
-        appName,
-        appVersion,
+        ...(validAppName && {appName}),
+        ...(validAppVersion && {appVersion}),
         ...(validDevice && {device}),
         ...(validOSinfo && {OS_info: `${os} ${osVersion}`}),
         ...(validUserName && {userName}),
         ...(validUserID && {userId}),
+        ...(validLanguage && {language}),
         ...props
     };
+    
+    if(!eventData || !isObject(eventData)) throw new Error('Event data is required')
 
     await analytics().logEvent('user_device_info',eventData)
+
+    } catch (error) {
+        console.log('Analytics_error:', error)
+    }
 };
 
 export default sendUserInfo;
