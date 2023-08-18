@@ -5,7 +5,7 @@ import initModule from "./analytics/initModule";
 import endedModule from "./analytics/endedModule";
 import logCustomEvent from "./analytics/logCustomEvent";
 import logOutEvent from "./analytics/logOutEvent";
-import presetEvent from "./analytics/presetEvent";
+import recommendedEvents from "./analytics/recommendedEvents";
 
 export {
     sendUserInfo,
@@ -15,5 +15,5 @@ export {
     endedModule,
     logCustomEvent,
     logOutEvent,
-    presetEvent
+    recommendedEvents
 }

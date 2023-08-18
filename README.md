@@ -84,7 +84,6 @@ npm install @janis-commerce/app-analytics
 
 ## Usage
 
-
 To use the methods associated with, for example, analytics you must import them as follows:
 
 ```javascript
