@@ -19,12 +19,12 @@ Events that are not tied to a specific type of business or product:
 To register any of these events, the way to do it with the package is as follows
 
 ```javascript
-import {recommendedEvents} from '@janiscommerce/app-analytics'
+import analytics from '@react-native-firebase/analytics'
 
 // ...
 
-const finishTutorial () => {
-    recommendedEvents().logTutorialComplete()
+const finishTutorial = async () => {
+    await analytics().logTutorialComplete()
     navigate('HomePage')
 }
 
