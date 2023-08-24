@@ -11,7 +11,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
         with:
-          node-version: 14
+          node-version: 16
       - run: npm i
       - run: npm run test:coverage
 
@@ -22,7 +22,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
         with:
-          node-version: 14
+          node-version: 16
           registry-url: https://registry.npmjs.org/
       - run: npm i
       - run: npm publish --access private
@@ -36,7 +36,7 @@ jobs:
         - uses: actions/checkout@v2
         - uses: actions/setup-node@v1
           with:
-            node-version: 14
+            node-version: 16
         - run: bash ./scripts/release-notes.sh
           env:
             RELEASE_SLACK_WEBHOOK_URL: ${{secrets.RELEASE_SLACK_WEBHOOK_URL}}
