@@ -18,8 +18,9 @@ jobs:
           node-version: 14.x
       - name: Install dependencies
         run: npm install
-      - name: Run coverage
-        run: npm run test:coverage
         env:
           NODE_AUTH_TOKEN: ${{secrets.authToken}}
+      - name: Run coverage
+        run: npm run test:coverage
+       
         

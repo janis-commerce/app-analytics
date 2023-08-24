@@ -20,6 +20,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - run: npm i
-    - run: npm run test:coverage
       env:
           NODE_AUTH_TOKEN: ${{secrets._authToken}}
+    - run: npm run test:coverage
+    
