@@ -7,3 +7,10 @@ jest.mock('@react-native-firebase/analytics', () =>
     logEvent: jest.fn(),
   })),
 );
+
+jest.mock('@janiscommerce/apps-helpers', () => {
+  const lib = jest.requireActual('@janiscommerce/apps-helpers');
+  return {
+    ...lib,
+  };
+});

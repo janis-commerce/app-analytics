@@ -21,7 +21,7 @@ describe('customEvent method', () => {
   });
 
   describe('register an event', () => {
-    it('when receieve a valid eventName an a valid dataEvent', async () => {
+    it('when receive a valid eventName an a valid dataEvent', async () => {
       const dataEvent = {user: 'figaro', warehouse: 'Belgrano', rol: 'picker'};
 
       const event = await customEvent('event_name', dataEvent);
