@@ -81,3 +81,62 @@ This dependency will allow that, when executing the methods of the package, thes
 npm install @janis-commerce/app-analytics
 ```
 ## Usage
+## Functions
+
+<dl>
+<dt><a href="#customEvent">customEvent(eventName, dataEvent)</a> ⇒ <code>boolean</code></dt>
+<dd><p>allows to register a custom event, receives the name of the event to be registered and the associated data</p>
+</dd>
+<dt><a href="#userInfoEvent">userInfoEvent(params)</a> ⇒ <code>boolean</code></dt>
+<dd><p>is responsible for registering an event that reports all data of user, device and app</p>
+</dd>
+</dl>
+
+<a name="customEvent"></a>
+
+## customEvent(eventName, dataEvent) ⇒ <code>boolean</code>
+allows to register a custom event, receives the name of the event to be registered and the associated data
+
+**Kind**: global function  
+**Throws**:
+
+- an error when some required params is not passed
+
+
+| Param | Type |
+| --- | --- |
+| eventName | <code>string</code> | 
+| dataEvent | <code>object</code> | 
+
+**Example**  
+```js
+import {logCustomEvent} from '@janiscommerce/app-analytics'
+logCustomEvent('event_init',{date:"2011-10-05T14:48:00.000Z"})
+```
+<a name="userInfoEvent"></a>
+
+## userInfoEvent(params) ⇒ <code>boolean</code>
+is responsible for registering an event that reports all data of user, device and app
+
+**Kind**: global function  
+**Throws**:
+
+- an error when not pass valid params
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| params | <code>object</code> |  |
+| params.appName | <code>string</code> |  |
+| params.appVersion | <code>string</code> | app version in use |
+| params.device | <code>string</code> | device model |
+| params.os | <code>string</code> | operative system |
+| params.osVersion | <code>string</code> | version of the model |
+| params.userName | <code>string</code> |  |
+| params.userId | <code>string</code> |  |
+
+**Example**  
+```js
+import {userInfoEvent} from '@janiscommerce/app-analytics
+userInfoEvent({appName:'app_name',appVersion:'1.0.0',device:'samsung a10',os:'android',osVersion:'10',userName:'user_name',userId:'012345678910'})
+```
