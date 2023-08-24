@@ -7,3 +7,9 @@ jest.mock('@react-native-firebase/analytics', () =>
     logEvent: jest.fn(),
   })),
 );
+
+jest.mock('@janiscommerce/apps-helpers', () => ({
+  _esModule: true,
+  isString: jest.fn().mockReturnValue(true),
+  isObject: jest.fn().mockReturnValue(true)
+}))
