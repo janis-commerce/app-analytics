@@ -81,6 +81,7 @@ This dependency will allow that, when executing the methods of the package, thes
 npm install @janis-commerce/app-analytics
 ```
 ## Usage
+
 ## Functions
 
 <dl>
