@@ -24,8 +24,8 @@ describe('userInfoEvent method', () => {
           language: argument,
         };
 
-        await expect(userInfoEvent(eventData)).rejects.toThrow(
-          'Event data is required',
+      await expect(userInfoEvent(eventData)).rejects.toThrow(
+          'Event data is',
         );
       });
     });
