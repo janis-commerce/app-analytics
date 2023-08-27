@@ -28,9 +28,11 @@
   ],
   "author": "Janis",
   "license": "ISC",
-  "peerDependencies": {
+  "dependencies": {
     "@react-native-firebase/analytics": "^18.3.0",
-    "@react-native-firebase/app": "^18.3.0",
+    "@react-native-firebase/app": "^18.3.0"
+  },
+  "peerDependencies": {
     "react": ">=17.0.2 <=18.2.0",
     "react-native": ">=0.67.5 <=0.72.0",
     "@janiscommerce/apps-helpers": "^1.6.2"
@@ -67,5 +69,12 @@
   },
   "jest": {
     "preset": "react-native"
+  },
+  "react-native":{
+      "platforms":{
+        "android":{
+          "sourceDir": "./android"
+      }
+    }
   }
 }

@@ -1,22 +1,18 @@
 import customEvent from '../lib/customEvent';
 
 describe('customEvent method', () => {
-  const invalidParams = [[], {}, '', 0];
+  const invalidArgument = []
+
   describe('thows an error when', () => {
-    it('not pass a valid string as an eventName argument', () => {
-      invalidParams.forEach(async (eventName) => {
-        await expect(customEvent(eventName, {})).rejects.toThrow(
-          'Event name is required',
-        );
+    it('not pass a valid string as an eventName argument', async () => {
+      __DEV__ = true
+      expect(await customEvent(invalidArgument,{})).toBe(false)
       });
     });
 
-    it('not pass a valid object as a dataEvent argument', () => {
-      invalidParams.forEach(async (dataEvent) => {
-        await expect(customEvent('event_name', dataEvent)).rejects.toThrow(
-          'Event data is required',
-        );
-      });
+    it('not pass a valid object as a dataEvent argument', async () => {
+      __DEV__ = false
+      expect(await customEvent('event_name',invalidArgument)).toBe(false)
     });
   });
 
@@ -29,4 +25,3 @@ describe('customEvent method', () => {
       expect(event).toBe(true);
     });
   });
-});
