@@ -1,18 +1,19 @@
 import customEvent from '../lib/customEvent';
+import * as utils from '../lib/utils';
 
 describe('customEvent method', () => {
-  const invalidArgument = []
+  const invalidArgument = [];
 
   describe('thows an error when', () => {
+    const mockedDevEnv = jest.spyOn(utils, 'isDevEnv');
+
     it('not pass a valid string as an eventName argument', async () => {
-      __DEV__ = true
-      expect(await customEvent(invalidArgument,{})).toBe(false)
-      });
+      mockedDevEnv.mockReturnValueOnce(false);
+      expect(await customEvent(invalidArgument, {})).toBe(false);
     });
 
     it('not pass a valid object as a dataEvent argument', async () => {
-      __DEV__ = false
-      expect(await customEvent('event_name',invalidArgument)).toBe(false)
+      expect(await customEvent('event_name', invalidArgument)).toBe(false);
     });
   });
 
@@ -25,3 +26,4 @@ describe('customEvent method', () => {
       expect(event).toBe(true);
     });
   });
+});

@@ -70,10 +70,12 @@
   "jest": {
     "preset": "react-native"
   },
-  "react-native":{
-      "platforms":{
-        "android":{
+  "react-native": {
+    "autoLinking": {
+      "platforms": {
+        "android": {
           "sourceDir": "./android"
+        }
       }
     }
   }
