@@ -104,14 +104,15 @@ allows to register a custom event, receives the name of the event to be register
 - an error when some required params is not passed
 
 
-| Param | Type |
-| --- | --- |
-| eventName | <code>string</code> | 
-| dataEvent | <code>object</code> | 
+| Param | Type | Description |
+| --- | --- | --- |
+| eventName | <code>string</code> | name of the event that we are going to register |
+| dataEvent | <code>object</code> | event parameters, information that we are going to send |
 
 **Example**  
 ```js
 import {logCustomEvent} from '@janiscommerce/app-analytics'
+
 logCustomEvent('event_init',{date:"2011-10-05T14:48:00.000Z"})
 ```
 <a name="userInfoEvent"></a>
@@ -127,17 +128,19 @@ is responsible for registering an event that reports all data of user, device an
 
 | Param | Type | Description |
 | --- | --- | --- |
-| params | <code>object</code> |  |
-| params.appName | <code>string</code> |  |
+| params | <code>object</code> | data set to send |
+| params.appName | <code>string</code> | name of the app in use |
 | params.appVersion | <code>string</code> | app version in use |
 | params.device | <code>string</code> | device model |
 | params.os | <code>string</code> | operative system |
 | params.osVersion | <code>string</code> | version of the model |
-| params.userName | <code>string</code> |  |
-| params.userId | <code>string</code> |  |
+| params.userName | <code>string</code> | janis registered user name |
+| params.userIdjanis | <code>string</code> | registered user id |
+| params.client | <code>string</code> | janis operating client |
 
 **Example**  
 ```js
 import {userInfoEvent} from '@janiscommerce/app-analytics
+
 userInfoEvent({appName:'app_name',appVersion:'1.0.0',device:'samsung a10',os:'android',osVersion:'10',userName:'user_name',userId:'012345678910'})
 ```
