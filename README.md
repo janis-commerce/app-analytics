@@ -142,5 +142,5 @@ is responsible for registering an event that reports all data of user, device an
 ```js
 import {userInfoEvent} from '@janiscommerce/app-analytics
 
-userInfoEvent({appName:'app_name',appVersion:'1.0.0',device:'samsung a10',os:'android',osVersion:'10',userName:'user_name',userId:'012345678910'})
+userInfoEvent({appName:'app_name',appVersion:'1.0.0',device:'samsung a10',os:'android',osVersion:'10',userName:'user_name',userId:'012345678910', client: 'janis'})
 ```
