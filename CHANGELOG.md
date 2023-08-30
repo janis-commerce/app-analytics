@@ -2,6 +2,16 @@
 
 ## [Unreleased]
 
+## [1.1.1] - 2023-08-30
+
+### Fixed
+
+- Fixed url for slack notification
+
+### Added
+
+- Added flag public for npm publish
+
 ## [1.1.0] - 2023-08-30
 
 ### Removed
