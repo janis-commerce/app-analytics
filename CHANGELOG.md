@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+## [1.0.2] - 2023-08-30
+
+### Fixed
+
+- Fixed step for npm publish script
+
 ## [1.0.1] - 2023-08-30
 
 ### Fixed
