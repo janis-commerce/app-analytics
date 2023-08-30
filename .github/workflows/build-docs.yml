@@ -2,7 +2,7 @@ name: Build Readme
 
 on:
   push:
-    branches: [ '*' ]
+    tags: [ '*' ]
 
 jobs:
 
