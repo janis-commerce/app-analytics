@@ -11,8 +11,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
         with:
-          node-version: 16
-      - run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
+          node-version: 14
       - run: npm i
       - run: npm run test:coverage
 
@@ -23,11 +22,13 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
         with:
-          node-version: 16
+          node-version: 14
           registry-url: https://registry.npmjs.org/
-      - run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
       - run: npm i
       - run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+
 
   send-slack-message:
       needs: publish-npm
@@ -36,7 +37,7 @@ jobs:
         - uses: actions/checkout@v2
         - uses: actions/setup-node@v1
           with:
-            node-version: 16
+            node-version: 14
         - run: bash ./scripts/release-notes.sh
           env:
             RELEASE_SLACK_WEBHOOK_URL: ${{secrets.RELEASE_SLACK_WEBHOOK_URL}}
