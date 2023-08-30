@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+## [1.1.0] - 2023-08-30
+
+### Removed
+
+- Removed pkg helpers
+
 ## [1.0.2] - 2023-08-30
 
 ### Fixed
