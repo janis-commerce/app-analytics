@@ -134,13 +134,14 @@ is responsible for registering an event that reports all data of user, device an
 | params.device | <code>string</code> | device model |
 | params.os | <code>string</code> | operative system |
 | params.osVersion | <code>string</code> | version of the model |
-| params.userName | <code>string</code> | janis registered user name |
-| params.userIdjanis | <code>string</code> | registered user id |
+| params.userEmail | <code>string</code> | janis registered user email |
+| params.userId | <code>string</code> | registered user id |
 | params.client | <code>string</code> | janis operating client |
+| params.language | <code>string</code> | language used in the application |
 
 **Example**  
 ```js
 import {userInfoEvent} from '@janiscommerce/app-analytics
 
-userInfoEvent({appName:'app_name',appVersion:'1.0.0',device:'samsung a10',os:'android',osVersion:'10',userName:'user_name',userId:'012345678910', client: 'janis'})
+userInfoEvent({appName:'app_name',appVersion:'1.0.0',device:'samsung a10',os:'android',osVersion:'10',userEmail:'user_name@janis.im',userId:'012345678910', client: 'janis'})
 ```

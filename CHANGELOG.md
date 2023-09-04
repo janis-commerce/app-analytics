@@ -2,6 +2,16 @@
 
 ## [Unreleased]
 
+## [1.2.0] - 2023-09-04
+
+### Added
+
+- Added key userEmail in userEvent function
+
+### Removed
+
+- Removed key userName in userEvent function
+
 ## [1.1.1] - 2023-08-30
 
 ### Fixed
