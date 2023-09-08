@@ -2,6 +2,18 @@
 
 ## [Unreleased]
 
+## [1.3.0] - 2023-09-08
+
+### Added
+
+- Added event screenViewEvent
+
+## [1.2.0] - 2023-09-04
+
+### Added
+
+- Added key userEmail in userEvent function
+
 ## [1.2.0] - 2023-09-04
 
 ### Added
