@@ -88,7 +88,7 @@ npm install @janis-commerce/app-analytics
 <dt><a href="#customEvent">customEvent(eventName, dataEvent)</a> ⇒ <code>boolean</code></dt>
 <dd><p>allows to register a custom event, receives the name of the event to be registered and the associated data</p>
 </dd>
-<dt><a href="#screenViewRegisterEvent">screenViewRegisterEvent(screenName, screenClass)</a> ⇒ <code>boolean</code></dt>
+<dt><a href="#screenViewEvent">screenViewEvent(screenName, screenClass)</a> ⇒ <code>boolean</code></dt>
 <dd><p>logs an event with information from the screen the user is viewing</p>
 </dd>
 <dt><a href="#userInfoEvent">userInfoEvent(params)</a> ⇒ <code>boolean</code></dt>
@@ -118,9 +118,9 @@ import {customEvent} from '@janiscommerce/app-analytics'
 
 customEvent('event_init',{date:"2011-10-05T14:48:00.000Z"})
 ```
-<a name="screenViewRegisterEvent"></a>
+<a name="screenViewEvent"></a>
 
-## screenViewRegisterEvent(screenName, screenClass) ⇒ <code>boolean</code>
+## screenViewEvent(screenName, screenClass) ⇒ <code>boolean</code>
 logs an event with information from the screen the user is viewing
 
 **Kind**: global function  
@@ -136,9 +136,9 @@ logs an event with information from the screen the user is viewing
 
 **Example**  
 ```js
-import {screenViewRegisterEvent} from '@janiscommerce/app-analytics'
+import {screenViewEvent} from '@janiscommerce/app-analytics'
 
-screenViewRegisterEvent('home','class_home'})
+screenViewEvent('home','class_home'})
 ```
 <a name="userInfoEvent"></a>
 
