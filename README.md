@@ -114,9 +114,9 @@ allows to register a custom event, receives the name of the event to be register
 
 **Example**  
 ```js
-import {logCustomEvent} from '@janiscommerce/app-analytics'
+import {customEvent} from '@janiscommerce/app-analytics'
 
-logCustomEvent('event_init',{date:"2011-10-05T14:48:00.000Z"})
+customEvent('event_init',{date:"2011-10-05T14:48:00.000Z"})
 ```
 <a name="screenViewRegisterEvent"></a>
 
