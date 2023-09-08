@@ -88,6 +88,9 @@ npm install @janis-commerce/app-analytics
 <dt><a href="#customEvent">customEvent(eventName, dataEvent)</a> ⇒ <code>boolean</code></dt>
 <dd><p>allows to register a custom event, receives the name of the event to be registered and the associated data</p>
 </dd>
+<dt><a href="#screenViewEvent">screenViewEvent(screenName, screenClass)</a> ⇒ <code>boolean</code></dt>
+<dd><p>logs an event with information from the screen the user is viewing</p>
+</dd>
 <dt><a href="#userInfoEvent">userInfoEvent(params)</a> ⇒ <code>boolean</code></dt>
 <dd><p>is responsible for registering an event that reports all data of user, device and app</p>
 </dd>
@@ -111,9 +114,31 @@ allows to register a custom event, receives the name of the event to be register
 
 **Example**  
 ```js
-import {logCustomEvent} from '@janiscommerce/app-analytics'
+import {customEvent} from '@janiscommerce/app-analytics'
 
-logCustomEvent('event_init',{date:"2011-10-05T14:48:00.000Z"})
+customEvent('event_init',{date:"2011-10-05T14:48:00.000Z"})
+```
+<a name="screenViewEvent"></a>
+
+## screenViewEvent(screenName, screenClass) ⇒ <code>boolean</code>
+logs an event with information from the screen the user is viewing
+
+**Kind**: global function  
+**Throws**:
+
+- an error when some required params is not passed
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| screenName | <code>string</code> | Screen name the user is currently viewing. |
+| screenClass | <code>string</code> | Current class associated with the view the user is currently viewing. |
+
+**Example**  
+```js
+import {screenViewEvent} from '@janiscommerce/app-analytics'
+
+screenViewEvent('home','class_home'})
 ```
 <a name="userInfoEvent"></a>
 
