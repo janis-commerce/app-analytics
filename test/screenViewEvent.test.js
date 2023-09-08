@@ -16,10 +16,7 @@ describe('screenViewEvent', () => {
   });
 
   it('register an event when pass an object with valid data', async () => {
-    const eventResponse = await screenViewEvent(
-      'screen class',
-      'screen name',
-    );
+    const eventResponse = await screenViewEvent('screen name', 'screen class');
 
     expect(eventResponse).toStrictEqual(true);
   });
