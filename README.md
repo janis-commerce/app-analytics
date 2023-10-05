@@ -78,7 +78,7 @@ This dependency will allow that, when executing the methods of the package, thes
 ## Installation
 
 ```sh
-npm install @janis-commerce/app-analytics
+npm install @janiscommerce/app-analytics
 ```
 ## Usage
 
@@ -138,7 +138,7 @@ logs an event with information from the screen the user is viewing
 ```js
 import {screenViewEvent} from '@janiscommerce/app-analytics'
 
-screenViewEvent('home','class_home'})
+screenViewEvent('home','class_home')
 ```
 <a name="userInfoEvent"></a>
 
