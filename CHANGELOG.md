@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+## [1.4.0] - 2023-10-06
+
+### Added
+
+- Added deprecation message for os key in log function
+
 ## [1.3.0] - 2023-09-08
 
 ### Added
