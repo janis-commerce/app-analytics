@@ -85,6 +85,9 @@ npm install @janiscommerce/app-analytics
 ## Functions
 
 <dl>
+<dt><a href="#actionEvent">actionEvent(params)</a> ⇒ <code>boolean</code></dt>
+<dd><p>is responsible for registering an event that reports the execution of an action by the user. Not use the camelCase format, since the function transforms the strings to lowercase. Instead write with spaces, as they will later be replaced by underscores</p>
+</dd>
 <dt><a href="#customEvent">customEvent(eventName, dataEvent)</a> ⇒ <code>boolean</code></dt>
 <dd><p>allows to register a custom event, receives the name of the event to be registered and the associated data</p>
 </dd>
@@ -96,6 +99,33 @@ npm install @janiscommerce/app-analytics
 </dd>
 </dl>
 
+<a name="actionEvent"></a>
+
+## actionEvent(params) ⇒ <code>boolean</code>
+is responsible for registering an event that reports the execution of an action by the user. Not use the camelCase format, since the function transforms the strings to lowercase. Instead write with spaces, as they will later be replaced by underscores
+
+**Kind**: global function  
+**Throws**:
+
+- an error when not pass valid params or any of the required parameters are missing
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| params | <code>object</code> | data set to send |
+| params.actionName | <code>string</code> | name of the action that will be registered |
+| params.client | <code>string</code> | janis operating client |
+| params.userEmail | <code>string</code> | janis registered user email |
+| params.userId | <code>string</code> | registered user id |
+| params.appVersion | <code>string</code> | app version in use |
+| params.anotherKey... | <code>string</code> | any extra data that you want to be sent |
+
+**Example**  
+```js
+import {actionEvent} from '@janiscommerce/app-analytics'
+
+actionEvent({actionName:'button press',client: 'client',userEmail: 'janis@janis.im',userId:'123456',appVersion:'1.20.0'})
+```
 <a name="customEvent"></a>
 
 ## customEvent(eventName, dataEvent) ⇒ <code>boolean</code>
