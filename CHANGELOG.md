@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+## [1.5.0] - 2023-11-01
+
+### Added
+
+- Added Action event
+
 ## [1.4.0] - 2023-10-06
 
 ### Added
