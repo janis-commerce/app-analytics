@@ -19,9 +19,18 @@ describe('customEvent method', () => {
 
   describe('register an event', () => {
     it('when receive a valid eventName an a valid dataEvent', async () => {
-      const dataEvent = {user: 'figaro', warehouse: 'Belgrano', rol: 'picker'};
+      const validParams = {
+        actionName: 'buttonPress',
+        client: 'janis',
+        userEmail: 'janis@janis.im',
+        userId: 'user2022Janis',
+        appVersion: '1.20.0',
+        user: 'figaro',
+        warehouse: 'Belgrano',
+        rol: 'picker',
+      };
 
-      const event = await customEvent('event_name', dataEvent);
+      const event = await customEvent('event_name', validParams);
 
       expect(event).toBe(true);
     });

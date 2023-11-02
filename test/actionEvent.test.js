@@ -18,15 +18,26 @@ describe('actionEvent method', () => {
 
     it('not pass all required data or this hasnt value', async () => {
       mockedDevEnv.mockReturnValueOnce(true);
-      expect(await actionEvent({actionName: 'buttonPress', client: ''})).toBe(
-        false,
-      );
+      expect(
+        await actionEvent({
+          actionName: 'buttonPress',
+          client: 'janis',
+          userEmail: '',
+        }),
+      ).toBe(false);
     });
   });
 
   describe('register an event', () => {
     it('when receive all required data', async () => {
-      expect(await actionEvent({...validParams, screenName: ''})).toBe(true);
+      expect(
+        await actionEvent({
+          ...validParams,
+          screenName: '',
+          name: 'Gonzalo',
+          tw: 'gonza016',
+        }),
+      ).toBe(true);
     });
   });
 });
