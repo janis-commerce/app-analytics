@@ -25,7 +25,7 @@ describe('customEvent method', () => {
         userEmail: 'janis@janis.im',
         userId: 'user2022Janis',
         appVersion: '1.20.0',
-        user: 'figaro',
+        user: '',
         warehouse: 'Belgrano',
         rol: 'picker',
       };

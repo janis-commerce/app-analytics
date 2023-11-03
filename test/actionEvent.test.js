@@ -33,9 +33,9 @@ describe('actionEvent method', () => {
       expect(
         await actionEvent({
           ...validParams,
-          screenName: '',
-          name: 'Gonzalo',
-          tw: 'gonza016',
+          name: 'user_janis',
+          lastName: '',
+          clientRef: 'janis2023',
         }),
       ).toBe(true);
     });

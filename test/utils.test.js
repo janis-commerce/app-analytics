@@ -1,4 +1,8 @@
-import {formatValue, validateRequiredStringParams} from '../lib/utils';
+import {
+  formatValue,
+  showErrorInDebug,
+  validateRequiredStringParams,
+} from '../lib/utils';
 
 describe('formatValue function', () => {
   it('return null when not receive a valid argument', () => {
@@ -20,31 +24,40 @@ describe('validateRequiredStringParams function', () => {
   const validArray = ['appVersion', 'client', 'userEmail'];
 
   describe('should throw an error when', () => {
-    it('receive invalid params', async () => {
-      expect(validateRequiredStringParams({}, validArray)).rejects.toThrow(
+    it('receive invalid params', () => {
+      expect(() => validateRequiredStringParams({}, validArray)).toThrow(
         'params are required',
       );
     });
 
-    it('receive invalid array', async () => {
-      expect(await validateRequiredStringParams(validParams, [])).toBe(
-        validParams,
-      );
+    it('receive invalid array', () => {
+      expect(validateRequiredStringParams(validParams, [])).toBe(validParams);
     });
 
-    it('when some required params was not pass', async () => {
-      expect(
+    it('when some required params was not pass', () => {
+      expect(() =>
         validateRequiredStringParams(
           {...validParams, appVersion: ''},
           validArray,
         ),
-      ).rejects.toThrow('appVersion property is required');
+      ).toThrow('appVersion property is required');
     });
   });
 
-  it('returns true when all required parameters have been passed', async () => {
-    expect(
-      await validateRequiredStringParams(validParams, validArray),
-    ).toStrictEqual(true);
+  it('returns true when all required parameters have been passed', () => {
+    expect(validateRequiredStringParams(validParams, validArray)).toStrictEqual(
+      true,
+    );
+  });
+});
+
+describe('showErrorInDebug function', () => {
+  afterEach(() => {
+    delete process.env.NODE_ENV;
+  });
+
+  it('return null', () => {
+    process.env.NODE_ENV = 'production';
+    expect(showErrorInDebug({message: 'message'})).toStrictEqual(null);
   });
 });
