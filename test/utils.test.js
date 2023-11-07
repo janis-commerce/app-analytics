@@ -2,6 +2,7 @@ import {
   formatValue,
   showErrorInDebug,
   validateRequiredStringParams,
+  splitRequiredAndRemainingParams,
 } from '../lib/utils';
 
 describe('formatValue function', () => {
@@ -31,7 +32,7 @@ describe('validateRequiredStringParams function', () => {
     });
 
     it('receive invalid array', () => {
-      expect(validateRequiredStringParams(validParams, [])).toBe(validParams);
+      expect(validateRequiredStringParams(validParams, [])).toBe(false);
     });
 
     it('when some required params was not pass', () => {
@@ -59,5 +60,41 @@ describe('showErrorInDebug function', () => {
   it('return null', () => {
     process.env.NODE_ENV = 'production';
     expect(showErrorInDebug({message: 'message'})).toStrictEqual(null);
+  });
+});
+
+describe('splitRequiredAndRemainingParams function', () => {
+  const params = {
+    rol: 'dev',
+    client: 'JANIS',
+    userEmail: 'janis@janis.im',
+  };
+
+  const requiredParams = ['client', 'userEmail'];
+
+  it('returns an array with two empty object when not receive params', () => {
+    expect(splitRequiredAndRemainingParams()).toStrictEqual([{}, {}]);
+  });
+
+  it('returns an array with an object and the received params when not pass required params', () => {
+    expect(splitRequiredAndRemainingParams(params)).toStrictEqual([{}, params]);
+  });
+
+  it('returns an array with required and remaining params when pass required params', () => {
+    expect(
+      splitRequiredAndRemainingParams(params, requiredParams),
+    ).toStrictEqual([
+      {client: 'janis', userEmail: 'janis@janis.im'},
+      {rol: 'dev'},
+    ]);
+  });
+
+  it('returns the required params formatted when receiving a callback as the third argument', () => {
+    expect(
+      splitRequiredAndRemainingParams(params, requiredParams, formatValue),
+    ).toStrictEqual([
+      {client: 'janis', userEmail: 'janis@janis.im'},
+      {rol: 'dev'},
+    ]);
   });
 });

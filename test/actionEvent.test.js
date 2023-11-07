@@ -4,7 +4,7 @@ import * as utils from '../lib/utils';
 describe('actionEvent method', () => {
   const mockedDevEnv = jest.spyOn(utils, 'isDevEnv');
   const validParams = {
-    actionName: 'buttonPress',
+    actionName: 'button Press',
     client: 'janis',
     userEmail: 'janis@janis.im',
     userId: 'user2022Janis',
