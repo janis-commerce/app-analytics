@@ -32,7 +32,9 @@ describe('validateRequiredStringParams function', () => {
     });
 
     it('receive invalid array', () => {
-      expect(validateRequiredStringParams(validParams, [])).toBe(false);
+      expect(() => validateRequiredStringParams(validParams, [])).toThrow(
+        'required params were not defined',
+      );
     });
 
     it('when some required params was not pass', () => {
