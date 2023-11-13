@@ -88,7 +88,7 @@ npm install @janiscommerce/app-analytics
 <dt><a href="#actionEvent">actionEvent(params)</a> ⇒ <code>boolean</code></dt>
 <dd><p>is responsible for registering an event that reports the execution of an action by the user. Not use the camelCase format, since the function transforms the strings to lowercase. Instead write with spaces, as they will later be replaced by underscores</p>
 </dd>
-<dt><a href="#customEvent">customEvent(eventName, dataEvent)</a> ⇒ <code>boolean</code></dt>
+<dt><a href="#customEvent">customEvent(eventName, params)</a> ⇒ <code>boolean</code></dt>
 <dd><p>allows to register a custom event, receives the name of the event to be registered and the associated data</p>
 </dd>
 <dt><a href="#screenViewEvent">screenViewEvent(screenName, screenClass)</a> ⇒ <code>boolean</code></dt>
@@ -118,7 +118,7 @@ is responsible for registering an event that reports the execution of an action 
 | params.userEmail | <code>string</code> | janis registered user email |
 | params.userId | <code>string</code> | registered user id |
 | params.appVersion | <code>string</code> | app version in use |
-| params.anotherKey... | <code>string</code> | any extra data that you want to be sent |
+| params.anotherKey... | <code>string</code> | any extra data that you want to be sent will be cataloged as dataEvent |
 
 **Example**  
 ```js
@@ -128,7 +128,7 @@ actionEvent({actionName:'button press',client: 'client',userEmail: 'janis@janis.
 ```
 <a name="customEvent"></a>
 
-## customEvent(eventName, dataEvent) ⇒ <code>boolean</code>
+## customEvent(eventName, params) ⇒ <code>boolean</code>
 allows to register a custom event, receives the name of the event to be registered and the associated data
 
 **Kind**: global function  
@@ -140,7 +140,12 @@ allows to register a custom event, receives the name of the event to be register
 | Param | Type | Description |
 | --- | --- | --- |
 | eventName | <code>string</code> | name of the event that we are going to register |
-| dataEvent | <code>object</code> | event parameters, information that we are going to send |
+| params | <code>object</code> | event parameters, information that we are going to send |
+| params.client | <code>string</code> | janis operating client |
+| params.userEmail | <code>string</code> | janis registered user email |
+| params.userId | <code>string</code> | registered user id |
+| params.appVersion | <code>string</code> | app version in use |
+| params.anotherKey... | <code>string</code> | any extra data that you want to be sent will be cataloged as dataEvent |
 
 **Example**  
 ```js

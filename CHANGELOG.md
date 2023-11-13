@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+## [1.6.0] - 2023-11-13
+
+### Added
+
+- Added required params for actionEvent and customEvent
+
 ## [1.5.0] - 2023-11-01
 
 ### Added
