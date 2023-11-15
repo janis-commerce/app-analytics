@@ -9,6 +9,7 @@ describe('actionEvent method', () => {
     userEmail: 'janis@janis.im',
     userId: 'user2022Janis',
     appVersion: '1.20.0',
+    screenName: 'Home',
   };
   describe('throws an error when', () => {
     it('not pass a valid object as an argument', async () => {

@@ -3,6 +3,7 @@ import {
   showErrorInDebug,
   validateRequiredStringParams,
   splitRequiredAndRemainingParams,
+  formatBasicData,
 } from '../lib/utils';
 
 describe('formatValue function', () => {
@@ -98,5 +99,32 @@ describe('splitRequiredAndRemainingParams function', () => {
       {client: 'janis', userEmail: 'janis@janis.im'},
       {rol: 'dev'},
     ]);
+  });
+});
+
+describe('formatBasicData function', () => {
+  const params = {
+    userEmail: 'janis@janis.im',
+    userId: 'janis12345',
+    appVersion: '1.22.0',
+  };
+
+  const basicData = {
+    userEmail: '',
+    userId: '',
+    client: '',
+    appVersion: '',
+  };
+  it('return an object with keys with empty values when not receives valid params', () => {
+    expect(formatBasicData()).toStrictEqual(basicData);
+  });
+
+  it('return an returns an object formatted based on the parameters received', () => {
+    expect(formatBasicData(params)).toStrictEqual({
+      userEmail: 'janis@janis.im',
+      userId: 'janis12345',
+      client: '',
+      appVersion: '1.22.0',
+    });
   });
 });

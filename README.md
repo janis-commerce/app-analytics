@@ -82,6 +82,20 @@ npm install @janiscommerce/app-analytics
 ```
 ## Usage
 
+## Modules
+
+<dl>
+<dt><a href="#module_sendUserInfo">sendUserInfo</a></dt>
+<dd><p>send userInfo Event to analytics console with user, app and device data.</p>
+</dd>
+<dt><a href="#module_sendAction">sendAction</a></dt>
+<dd><p>send an action log to analytics console</p>
+</dd>
+<dt><a href="#module_sendCustomEvent">sendCustomEvent</a></dt>
+<dd><p>send a new customEvent to analytics console</p>
+</dd>
+</dl>
+
 ## Functions
 
 <dl>
@@ -98,6 +112,33 @@ npm install @janiscommerce/app-analytics
 <dd><p>is responsible for registering an event that reports all data of user, device and app</p>
 </dd>
 </dl>
+
+<a name="module_sendUserInfo"></a>
+
+## sendUserInfo
+send userInfo Event to analytics console with user, app and device data.
+
+<a name="module_sendAction"></a>
+
+## sendAction
+send an action log to analytics console
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| actionName | <code>string</code> | is the name of the action the user completed |
+| params | <code>object</code> | An object with any additional information you would like to register for the event |
+
+<a name="module_sendCustomEvent"></a>
+
+## sendCustomEvent
+send a new customEvent to analytics console
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| eventName | <code>string</code> | is the name that will be received the event logged |
+| params | <code>object</code> | An object with any additional information you would like to register for the event |
 
 <a name="actionEvent"></a>
 
