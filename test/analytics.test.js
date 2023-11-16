@@ -3,6 +3,7 @@ import Analytics from '../lib/analitics';
 import userInfoEvent from '../lib/userInfoEvent';
 import actionEvent from '../lib/actionEvent';
 import customEvent from '../lib/customEvent';
+import screenViewEvent from '../lib/screenViewEvent';
 import * as utils from '../lib/utils';
 
 const eventData = {
@@ -19,6 +20,7 @@ const eventData = {
 jest.mock('../lib/userInfoEvent');
 jest.mock('../lib/actionEvent');
 jest.mock('../lib/customEvent');
+jest.mock('../lib/screenViewEvent');
 
 describe('Anaylytics class', () => {
   const mockedDevEnv = jest.spyOn(utils, 'isDevEnv');
@@ -109,6 +111,28 @@ describe('Anaylytics class', () => {
 
       await waitFor(() => {
         expect(customEvent).not.toBeCalled();
+      });
+    });
+  });
+
+  describe('sendScreenTracking', () => {
+    it('send screenViewEvent to analytics when running in productive environments', async () => {
+      mockedDevEnv.mockReturnValueOnce(false);
+      
+      Analytics.sendScreenTracking('Home', 'Home');
+
+      await waitFor(() => {
+        expect(screenViewEvent).toBeCalled();
+      });
+    });
+
+    it('should not send the event in development environments', async () => {
+      mockedDevEnv.mockReturnValueOnce(true);
+
+      Analytics.sendScreenTracking('Home', 'Home');
+
+      await waitFor(() => {
+        expect(screenViewEvent).not.toBeCalled();
       });
     });
   });
