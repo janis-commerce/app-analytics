@@ -4,6 +4,7 @@ import {
   validateRequiredStringParams,
   splitRequiredAndRemainingParams,
   formatBasicData,
+  validObjectWithValues,
 } from '../lib/utils';
 
 describe('formatValue function', () => {
@@ -126,5 +127,15 @@ describe('formatBasicData function', () => {
       client: '',
       appVersion: '1.22.0',
     });
+  });
+});
+
+describe('validObjectWithValues function', () => {
+  it('should return true when receive a valid object as an argument', () => {
+    expect(validObjectWithValues({language: 'en-US'})).toStrictEqual(true);
+  });
+
+  it('should return false when receive an invalid object as an argument', () => {
+    expect(validObjectWithValues([])).toStrictEqual(false);
   });
 });

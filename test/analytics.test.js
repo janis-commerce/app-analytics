@@ -118,7 +118,7 @@ describe('Anaylytics class', () => {
   describe('sendScreenTracking', () => {
     it('send screenViewEvent to analytics when running in productive environments', async () => {
       mockedDevEnv.mockReturnValueOnce(false);
-      
+
       Analytics.sendScreenTracking('Home', 'Home');
 
       await waitFor(() => {
