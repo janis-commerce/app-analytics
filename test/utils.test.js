@@ -131,11 +131,13 @@ describe('formatBasicData function', () => {
 });
 
 describe('validObjectWithValues function', () => {
-  it('should return true when receive a valid object as an argument', () => {
-    expect(validObjectWithValues({language: 'en-US'})).toStrictEqual(true);
+  it('should return the received object when this pass validations', () => {
+    expect(validObjectWithValues({language: 'en-US'})).toStrictEqual({
+      language: 'en-US',
+    });
   });
 
-  it('should return false when receive an invalid object as an argument', () => {
-    expect(validObjectWithValues([])).toStrictEqual(false);
+  it('should return an empty object when receive an invalid argument', () => {
+    expect(validObjectWithValues([])).toStrictEqual({});
   });
 });
