@@ -1,4 +1,3 @@
-import {waitFor} from '@testing-library/react-native';
 import Analytics from '../lib/analitics';
 import userInfoEvent from '../lib/userInfoEvent';
 import actionEvent from '../lib/actionEvent';
@@ -34,31 +33,27 @@ describe('Anaylytics class', () => {
   });
 
   describe('sendUserInfo method', () => {
-    it('send userInfo event to analytics when running in productive environments', async () => {
+    it('send userInfo event to analytics when running in productive environments', () => {
       mockedDevEnv.mockReturnValueOnce(false);
 
       const analytics = new Analytics(eventData);
       analytics.sendUserInfo();
 
-      await waitFor(() => {
-        expect(userInfoEvent).toBeCalled();
-      });
+      expect(userInfoEvent).toBeCalled();
     });
 
-    it('should not send the event in development environments', async () => {
+    it('should not send the event in development environments', () => {
       mockedDevEnv.mockReturnValueOnce(true);
 
       const analytics = new Analytics();
       analytics.sendUserInfo();
 
-      await waitFor(() => {
-        expect(userInfoEvent).not.toBeCalled();
-      });
+      expect(userInfoEvent).not.toBeCalled();
     });
   });
 
   describe('sendAction method', () => {
-    it('send userInfo event to analytics when running in productive environments', async () => {
+    it('send userInfo event to analytics when running in productive environments', () => {
       mockedDevEnv.mockReturnValueOnce(false);
 
       const analytics = new Analytics({...eventData, screenName: 'Home'});
@@ -68,26 +63,22 @@ describe('Anaylytics class', () => {
         userRol: 'picker',
       });
 
-      await waitFor(() => {
-        expect(actionEvent).toBeCalled();
-      });
+      expect(actionEvent).toBeCalled();
     });
 
-    it('should not send the event in development environments', async () => {
+    it('should not send the event in development environments', () => {
       mockedDevEnv.mockReturnValueOnce(true);
 
       const analytics = new Analytics(eventData);
 
       analytics.sendAction('on press button', []);
 
-      await waitFor(() => {
-        expect(actionEvent).not.toBeCalled();
-      });
+      expect(actionEvent).not.toBeCalled();
     });
   });
 
   describe('sendCustomEvent method', () => {
-    it('send customEvent to analytics when running in productive environments', async () => {
+    it('send customEvent to analytics when running in productive environments', () => {
       mockedDevEnv.mockReturnValueOnce(false);
 
       const analytics = new Analytics(eventData);
@@ -97,43 +88,35 @@ describe('Anaylytics class', () => {
         location: 'palermo',
       });
 
-      await waitFor(() => {
-        expect(customEvent).toBeCalled();
-      });
+      expect(customEvent).toBeCalled();
     });
 
-    it('should not send the event in development environments', async () => {
+    it('should not send the event in development environments', () => {
       mockedDevEnv.mockReturnValueOnce(true);
 
       const analytics = new Analytics({});
 
       analytics.sendCustomEvent('customTest', 'testing value');
 
-      await waitFor(() => {
-        expect(customEvent).not.toBeCalled();
-      });
+      expect(customEvent).not.toBeCalled();
     });
   });
 
   describe('sendScreenTracking', () => {
-    it('send screenViewEvent to analytics when running in productive environments', async () => {
+    it('send screenViewEvent to analytics when running in productive environments', () => {
       mockedDevEnv.mockReturnValueOnce(false);
 
       Analytics.sendScreenTracking('Home', 'Home');
 
-      await waitFor(() => {
-        expect(screenViewEvent).toBeCalled();
-      });
+      expect(screenViewEvent).toBeCalled();
     });
 
-    it('should not send the event in development environments', async () => {
+    it('should not send the event in development environments', () => {
       mockedDevEnv.mockReturnValueOnce(true);
 
       Analytics.sendScreenTracking('Home', 'Home');
 
-      await waitFor(() => {
-        expect(screenViewEvent).not.toBeCalled();
-      });
+      expect(screenViewEvent).not.toBeCalled();
     });
   });
 });
