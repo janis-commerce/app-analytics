@@ -85,6 +85,9 @@ npm install @janiscommerce/app-analytics
 ## Modules
 
 <dl>
+<dt><a href="#module_initialize">initialize</a></dt>
+<dd><p>This method is responsible for initializing the analytics class and obtaining the user information to build the instance;</p>
+</dd>
 <dt><a href="#module_sendUserInfo">sendUserInfo</a></dt>
 <dd><p>send userInfo Event to analytics console with user, app and device data.</p>
 </dd>
@@ -93,6 +96,17 @@ npm install @janiscommerce/app-analytics
 </dd>
 <dt><a href="#module_sendCustomEvent">sendCustomEvent</a></dt>
 <dd><p>send a new customEvent to analytics console</p>
+</dd>
+<dt><a href="#module_sendScreenTracking">sendScreenTracking</a></dt>
+<dd><p>send a screenViewEvent to analytics console to record the screens the user visits</p>
+</dd>
+</dl>
+
+## Members
+
+<dl>
+<dt><a href="#Analytics">Analytics</a></dt>
+<dd><p>This class is responsible for handling events to record user information, actions and custom events</p>
 </dd>
 </dl>
 
@@ -113,6 +127,20 @@ npm install @janiscommerce/app-analytics
 </dd>
 </dl>
 
+<a name="module_initialize"></a>
+
+## initialize
+This method is responsible for initializing the analytics class and obtaining the user information to build the instance;
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| appVersion | <code>string</code> | a string that represents the version number of the app |
+
+**Example**  
+```js
+const analyticsInstance = await Analytics.initialize('1.22.0.0')
+```
 <a name="module_sendUserInfo"></a>
 
 ## sendUserInfo
@@ -127,6 +155,7 @@ send an action log to analytics console
 | Param | Type | Description |
 | --- | --- | --- |
 | actionName | <code>string</code> | is the name of the action the user completed |
+| screenName | <code>string</code> | is the name of the screen where the action was called |
 | params | <code>object</code> | An object with any additional information you would like to register for the event |
 
 <a name="module_sendCustomEvent"></a>
@@ -139,6 +168,28 @@ send a new customEvent to analytics console
 | --- | --- | --- |
 | eventName | <code>string</code> | is the name that will be received the event logged |
 | params | <code>object</code> | An object with any additional information you would like to register for the event |
+
+<a name="module_sendScreenTracking"></a>
+
+## sendScreenTracking
+send a screenViewEvent to analytics console to record the screens the user visits
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| screenName | <code>string</code> | Screen name the user is currently viewing. |
+| screenClass | <code>string</code> | Current class associated with the view the user is currently viewing. |
+
+<a name="Analytics"></a>
+
+## Analytics
+This class is responsible for handling events to record user information, actions and custom events
+
+**Kind**: global variable  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| params | <code>object</code> | an object that contains all the information regarding the user that you want to add as initial information. This will then be used based on the need of each event. |
 
 <a name="actionEvent"></a>
 
@@ -159,6 +210,7 @@ is responsible for registering an event that reports the execution of an action 
 | params.userEmail | <code>string</code> | janis registered user email |
 | params.userId | <code>string</code> | registered user id |
 | params.appVersion | <code>string</code> | app version in use |
+| params.screenName | <code>string</code> | screen where the action was called |
 | params.anotherKey... | <code>string</code> | any extra data that you want to be sent will be cataloged as dataEvent |
 
 **Example**  

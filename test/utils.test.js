@@ -5,6 +5,7 @@ import {
   splitRequiredAndRemainingParams,
   formatBasicData,
   validObjectWithValues,
+  promiseWrapper,
 } from '../lib/utils';
 
 describe('formatValue function', () => {
@@ -139,5 +140,33 @@ describe('validObjectWithValues function', () => {
 
   it('should return an empty object when receive an invalid argument', () => {
     expect(validObjectWithValues([])).toStrictEqual({});
+  });
+});
+
+describe('promiseWrapper', () => {
+  describe('return error', () => {
+    it('with promise called catch', async () => {
+      const promise = await promiseWrapper(
+        Promise.reject(new Error('called catch')),
+      );
+      expect.assertions(3);
+      expect(promise).toEqual(expect.any(Array));
+      const [data, error] = promise;
+      expect(data).toBe(null);
+      expect(error).toEqual(expect.any(Object));
+    });
+  });
+
+  describe('return data', () => {
+    it('with promise correct', async () => {
+      const prom = () =>
+        new Promise((resolve) => resolve({name: 'Janis Picking'}));
+      const promise = await promiseWrapper(prom());
+      const [data, error] = promise;
+      expect.assertions(3);
+      expect(promise).toEqual(expect.any(Array));
+      expect(data).toEqual(expect.any(Object));
+      expect(error).toBe(null);
+    });
   });
 });
