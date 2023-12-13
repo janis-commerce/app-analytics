@@ -82,6 +82,13 @@ npm install @janiscommerce/app-analytics
 ```
 ## Usage
 
+## Classes
+
+<dl>
+<dt><a href="#Analytics">Analytics</a></dt>
+<dd></dd>
+</dl>
+
 ## Modules
 
 <dl>
@@ -99,14 +106,6 @@ npm install @janiscommerce/app-analytics
 </dd>
 <dt><a href="#module_sendScreenTracking">sendScreenTracking</a></dt>
 <dd><p>send a screenViewEvent to analytics console to record the screens the user visits</p>
-</dd>
-</dl>
-
-## Members
-
-<dl>
-<dt><a href="#Analytics">Analytics</a></dt>
-<dd><p>This class is responsible for handling events to record user information, actions and custom events</p>
 </dd>
 </dl>
 
@@ -183,14 +182,24 @@ send a screenViewEvent to analytics console to record the screens the user visit
 <a name="Analytics"></a>
 
 ## Analytics
+**Kind**: global class  
+<a name="new_Analytics_new"></a>
+
+### new Analytics(params)
 This class is responsible for handling events to record user information, actions and custom events
 
-**Kind**: global variable  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | params | <code>object</code> | an object that contains all the information regarding the user that you want to add as initial information. This will then be used based on the need of each event. |
+| params.appVersion | <code>string</code> | a string that represents the version number of the app |
 
+**Example**  
+```js
+import Analytics from '@janiscommerce/app-analytics'
+
+const analytics = new Analytics({appVersion:'1.22.0'})
+```
 <a name="actionEvent"></a>
 
 ## actionEvent(params) ⇒ <code>boolean</code>

@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Changed
+
+- Changed exported functions, instead, a class is exported
+
 ## [1.6.0] - 2023-11-13
 
 ### Added
