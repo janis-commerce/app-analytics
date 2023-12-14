@@ -2,9 +2,13 @@
 
 ## [Unreleased]
 
+## [2.0.0] - 2023-12-18
+
+### Breaking Changes
+
 ### Changed
 
-- Changed exported functions, instead, a class is exported
+- No longer returns functions. Now returns a class that it's needed to instance in order to use methods.
 
 ## [1.6.0] - 2023-11-13
 
