@@ -28,12 +28,36 @@ describe('userInfoEvent method', () => {
       appName: 'janis_app',
       appVersion: '1.0.0',
       device: 'samsung',
-      os: 'android',
       osVersion: '12',
       userEmail: 'User_Name@janis.im',
       userId: '000123456789',
       language: 'ES-AR',
       client: 'janis',
+      screenSize: {
+        screenWidth: '480',
+        screenHeight: '840',
+      },
+    };
+
+    const eventResponse = await userInfoEvent(eventData);
+
+    expect(eventResponse).toStrictEqual(true);
+  });
+
+  it('register an event without screenSize if screenWidth or screenHeight arent defined', async () => {
+    const eventData = {
+      appName: 'janis_app',
+      appVersion: '1.0.0',
+      device: 'samsung',
+      osVersion: '12',
+      userEmail: 'User_Name@janis.im',
+      userId: '000123456789',
+      language: 'ES-AR',
+      client: 'janis',
+      screenSize: {
+        screenWidth: '480',
+        screenHeight: '840',
+      },
     };
 
     const eventResponse = await userInfoEvent(eventData);

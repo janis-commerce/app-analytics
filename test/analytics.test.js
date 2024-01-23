@@ -62,6 +62,7 @@ describe('Anaylytics class', () => {
         userEmail: 'janis@janis.im',
         userId: 'janis1234',
         client: 'janis',
+        language: 'language',
       });
 
       expect(await analytics.initialize('1.22.0.0')).toStrictEqual({
@@ -69,6 +70,7 @@ describe('Anaylytics class', () => {
         userEmail: 'janis@janis.im',
         userId: 'janis1234',
         client: 'janis',
+        language: 'language',
       });
     });
 
@@ -104,10 +106,6 @@ describe('Anaylytics class', () => {
 
     expect(await analytics.initialize('1.22.0.0')).toStrictEqual({
       appVersion: '1.22.0.0',
-      client: '',
-      language: '',
-      userEmail: '',
-      userId: '',
     });
   });
 

@@ -6,6 +6,7 @@ import {
   formatBasicData,
   validObjectWithValues,
   promiseWrapper,
+  includesAllProperties,
 } from '../lib/utils';
 
 describe('formatValue function', () => {
@@ -73,9 +74,10 @@ describe('splitRequiredAndRemainingParams function', () => {
     rol: 'dev',
     client: 'JANIS',
     userEmail: 'janis@janis.im',
+    userId: '',
   };
 
-  const requiredParams = ['client', 'userEmail'];
+  const requiredParams = ['client', 'userEmail', 'userId'];
 
   it('returns an array with two empty object when not receive params', () => {
     expect(splitRequiredAndRemainingParams()).toStrictEqual([{}, {}]);
@@ -167,6 +169,47 @@ describe('promiseWrapper', () => {
       expect(promise).toEqual(expect.any(Array));
       expect(data).toEqual(expect.any(Object));
       expect(error).toBe(null);
+    });
+  });
+});
+
+describe('includesAllProperties', () => {
+  const invalidValues = [{}, []];
+  const dataToCheck = {
+    name: 'janis',
+    address: 'costa rica 4988',
+    country: 'argentina',
+  };
+  describe('returns false if', () => {
+    it('not receive a valid object as first argument', () => {
+      invalidValues.forEach((invalidData) => {
+        expect(includesAllProperties(invalidData)).toBeFalsy();
+      });
+    });
+
+    it('the object not contain some required property', () => {
+      expect(
+        includesAllProperties(dataToCheck, [
+          'name',
+          'address',
+          'country',
+          'foundationYear',
+        ]),
+      ).toBeFalsy();
+    });
+  });
+
+  describe('returns true if', () => {
+    it('not receive a valid array as second argument', () => {
+      invalidValues.forEach((invalidData) => {
+        expect(includesAllProperties(dataToCheck, invalidData)).toBeTruthy();
+      });
+    });
+
+    it('the object contains all required properties', () => {
+      expect(
+        includesAllProperties(dataToCheck, ['name', 'address', 'country']),
+      ).toBeTruthy();
     });
   });
 });

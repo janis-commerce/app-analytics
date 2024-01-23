@@ -82,13 +82,6 @@ npm install @janiscommerce/app-analytics
 ```
 ## Usage
 
-## Classes
-
-<dl>
-<dt><a href="#Analytics">Analytics</a></dt>
-<dd></dd>
-</dl>
-
 ## Modules
 
 <dl>
@@ -107,6 +100,13 @@ npm install @janiscommerce/app-analytics
 <dt><a href="#module_sendScreenTracking">sendScreenTracking</a></dt>
 <dd><p>send a screenViewEvent to analytics console to record the screens the user visits</p>
 </dd>
+</dl>
+
+## Classes
+
+<dl>
+<dt><a href="#Analytics">Analytics</a></dt>
+<dd></dd>
 </dl>
 
 ## Functions
@@ -294,12 +294,14 @@ is responsible for registering an event that reports all data of user, device an
 | params.appName | <code>string</code> | name of the app in use |
 | params.appVersion | <code>string</code> | app version in use |
 | params.device | <code>string</code> | device model |
-| params.os | <code>string</code> | operative system |
 | params.osVersion | <code>string</code> | version of the model |
 | params.userEmail | <code>string</code> | janis registered user email |
 | params.userId | <code>string</code> | registered user id |
 | params.client | <code>string</code> | janis operating client |
 | params.language | <code>string</code> | language used in the application |
+| params.screenSize | <code>string</code> | screen size to user'device |
+| params.screenSize.screenHeight | <code>string</code> | user device screen height |
+| params.screenSize.screenWidth | <code>string</code> | user device screen width |
 
 **Example**  
 ```js
