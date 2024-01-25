@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 
+## [2.1.0] - 2024-01-25
 ### Added
 
 - Screen size is now sent to analytics
