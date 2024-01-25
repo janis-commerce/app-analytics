@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+### Added
+
+- Screen size is now sent to analytics
+
+### Changed
+
+- Changed value of client sent, now we are sending tcode key
+
 ## [2.0.0] - 2023-12-18
 
 ### Breaking Changes

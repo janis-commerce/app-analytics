@@ -91,7 +91,7 @@ describe('Anaylytics class', () => {
 
       expect(await analytics.initialize('1.22.0.0')).toStrictEqual({
         appVersion: '1.22.0.0',
-        client: 'Fizzmod',
+        client: 'validtcode',
         language: 'en-US',
         userEmail: 'janis@janis.im',
         userId: '5fd7b2c8d71fb1e2743bb64e',
