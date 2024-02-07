@@ -112,9 +112,15 @@ describe('Anaylytics class', () => {
   describe('sendUserInfo method', () => {
     it('send userInfo event to analytics when running in productive environments', async () => {
       spyGetUserInfo.mockReturnValueOnce(userInfoResponse);
-      mockedDevEnv.mockReturnValueOnce(false).mockReturnValueOnce(false);
+      mockedDevEnv.mockReturnValueOnce(false);
 
-      const analytics = new Analytics({appVersion: '1.22.0.0'});
+      const analytics = new Analytics({
+        appVersion: '1.22.0.0',
+        client: 'janis',
+        userEmail: 'janis@janis.im',
+        userId: '12345',
+        language: 'EN-US',
+      });
       analytics.sendUserInfo();
 
       await waitFor(() => {
@@ -125,22 +131,65 @@ describe('Anaylytics class', () => {
     it('should not send the event in development environments', async () => {
       mockedDevEnv.mockReturnValueOnce(true);
 
-      const analytics = new Analytics();
+      const analytics = new Analytics({
+        appVersion: '1.22.0.0',
+        client: 'janis',
+        userEmail: 'janis@janis.im',
+        userId: '12345',
+        language: 'EN-US',
+      });
       analytics.sendUserInfo();
 
       await waitFor(() => {
         expect(userInfoEvent).not.toBeCalled();
       });
     });
+
+    it('return null when not receive required params', async () => {
+      mockedDevEnv.mockReturnValueOnce(true);
+
+      const analytics = new Analytics();
+      const response = await analytics.sendUserInfo();
+
+      await waitFor(() => {
+        expect(userInfoEvent).not.toBeCalled();
+        expect(response).toBeNull();
+      });
+    });
   });
 
   describe('sendAction method', () => {
-    it('send userInfo event to analytics when running in productive environments', async () => {
-      mockedDevEnv.mockReturnValueOnce(false).mockReturnValueOnce(false);
+    it('should not send the event in development environments', async () => {
+      mockedDevEnv.mockReturnValueOnce(true);
 
-      const analytics = new Analytics({appVersion: '1.22.0.0'});
+      const analytics = new Analytics({
+        appVersion: '1.22.0.0',
+        client: 'janis',
+        userEmail: 'janis@janis.im',
+        userId: '12345',
+        language: 'EN-US',
+      });
 
-      analytics.sendAction('on press button', 'home', {
+      analytics.sendAction('on press button', []);
+
+      await waitFor(() => {
+        expect(actionEvent).not.toBeCalled();
+      });
+    });
+
+    it('send actionEvent event to analytics when running in productive environments', async () => {
+      spyGetUserInfo.mockReturnValueOnce(userInfoResponse);
+      mockedDevEnv.mockReturnValueOnce(false);
+
+      const analytics = new Analytics({
+        appVersion: '1.22.0.0',
+        client: 'janis',
+        userEmail: 'janis@janis.im',
+        userId: '12345',
+        language: 'EN-US',
+      });
+
+      analytics.sendAction('on press button', 'Home', {
         userRol: 'picker',
       });
 
@@ -149,29 +198,39 @@ describe('Anaylytics class', () => {
       });
     });
 
-    it('should not send the event in development environments', async () => {
+    it('return null when not receive required params', async () => {
       mockedDevEnv.mockReturnValueOnce(true);
 
-      const analytics = new Analytics({appVersion: '1.22.0.0'});
-
-      analytics.sendAction('on press button', []);
+      const analytics = new Analytics();
+      const response = await analytics.sendAction();
 
       await waitFor(() => {
         expect(actionEvent).not.toBeCalled();
+        expect(response).toBeNull();
       });
     });
   });
 
   describe('sendCustomEvent method', () => {
     it('send customEvent to analytics when running in productive environments', async () => {
-      mockedDevEnv.mockReturnValueOnce(false).mockReturnValueOnce(false);
+      mockedDevEnv.mockReturnValueOnce(false);
 
-      const analytics = new Analytics({appVersion: '1.22.0.0'});
-
-      analytics.sendCustomEvent('customTest', {
-        rol: 'dev',
-        location: 'palermo',
+      const analytics = new Analytics({
+        appVersion: '1.22.0.0',
+        client: 'janis',
+        userEmail: 'janis@janis.im',
+        userId: '12345',
+        language: 'EN-US',
       });
+
+      analytics.sendCustomEvent(
+        'customTest',
+        {
+          rol: 'dev',
+          location: 'palermo',
+        },
+        ['rol', 'location'],
+      );
 
       await waitFor(() => {
         expect(customEvent).toBeCalled();
@@ -181,7 +240,13 @@ describe('Anaylytics class', () => {
     it('should not send the event in development environments', async () => {
       mockedDevEnv.mockReturnValueOnce(true);
 
-      const analytics = new Analytics({appVersion: '1.22.0.0'});
+      const analytics = new Analytics({
+        appVersion: '1.22.0.0',
+        client: 'janis',
+        userEmail: 'janis@janis.im',
+        userId: '12345',
+        language: 'EN-US',
+      });
 
       analytics.sendCustomEvent('customTest', 'testing value');
 
@@ -189,23 +254,68 @@ describe('Anaylytics class', () => {
         expect(customEvent).not.toBeCalled();
       });
     });
-  });
 
-  describe('sendScreenTracking', () => {
-    it('send screenViewEvent to analytics when running in productive environments', () => {
-      mockedDevEnv.mockReturnValueOnce(false);
-
-      Analytics.sendScreenTracking('Home', 'Home');
-
-      expect(screenViewEvent).toBeCalled();
-    });
-
-    it('should not send the event in development environments', () => {
+    it('return null when not receive required params', async () => {
       mockedDevEnv.mockReturnValueOnce(true);
 
-      Analytics.sendScreenTracking('Home', 'Home');
+      const analytics = new Analytics();
+      const response = await analytics.sendCustomEvent();
 
-      expect(screenViewEvent).not.toBeCalled();
+      await waitFor(() => {
+        expect(customEvent).not.toBeCalled();
+        expect(response).toBeNull();
+      });
+    });
+  });
+
+  describe('sendScreenTracking method', () => {
+    it('send screenViewEvent to analytics when running in productive environments', async () => {
+      spyGetUserInfo.mockReturnValueOnce(userInfoResponse);
+      mockedDevEnv.mockReturnValueOnce(false).mockReturnValueOnce(false);
+
+      const analytics = new Analytics({
+        appVersion: '1.22.0.0',
+        client: 'janis',
+        userEmail: 'janis@janis.im',
+        userId: '12345',
+        language: 'EN-US',
+      });
+
+      analytics.sendScreenTracking('Home', 'Home');
+
+      await waitFor(() => {
+        expect(screenViewEvent).toBeCalled();
+      });
+    });
+
+    it('return null when not receive required params', async () => {
+      mockedDevEnv.mockReturnValueOnce(true);
+
+      const analytics = new Analytics();
+      const response = await analytics.sendScreenTracking();
+
+      await waitFor(() => {
+        expect(screenViewEvent).not.toBeCalled();
+        expect(response).toBeNull();
+      });
+    });
+
+    it('should not send the event in development environments', async () => {
+      mockedDevEnv.mockReturnValue(true);
+
+      const analytics = new Analytics({
+        appVersion: '1.22.0.0',
+        client: 'janis',
+        userEmail: 'janis@janis.im',
+        userId: '12345',
+        language: 'EN-US',
+      });
+
+      analytics.sendScreenTracking('Home', 'Home');
+
+      await waitFor(() => {
+        expect(screenViewEvent).not.toBeCalled();
+      });
     });
   });
 });
