@@ -115,7 +115,7 @@ npm install @janiscommerce/app-analytics
 <dt><a href="#actionEvent">actionEvent(params)</a> ⇒ <code>boolean</code></dt>
 <dd><p>is responsible for registering an event that reports the execution of an action by the user. Not use the camelCase format, since the function transforms the strings to lowercase. Instead write with spaces, as they will later be replaced by underscores</p>
 </dd>
-<dt><a href="#customEvent">customEvent(eventName, params)</a> ⇒ <code>boolean</code></dt>
+<dt><a href="#customEvent">customEvent(eventName, params, customRequiredParams)</a> ⇒ <code>boolean</code></dt>
 <dd><p>allows to register a custom event, receives the name of the event to be registered and the associated data</p>
 </dd>
 <dt><a href="#screenViewEvent">screenViewEvent(screenName, screenClass)</a> ⇒ <code>boolean</code></dt>
@@ -167,6 +167,7 @@ send a new customEvent to analytics console
 | --- | --- | --- |
 | eventName | <code>string</code> | is the name that will be received the event logged |
 | params | <code>object</code> | An object with any additional information you would like to register for the event |
+| requiredParams | <code>array</code> | array of extra strings required for a custom event |
 
 <a name="module_sendScreenTracking"></a>
 
@@ -218,6 +219,7 @@ is responsible for registering an event that reports the execution of an action 
 | params.client | <code>string</code> | janis operating client |
 | params.userEmail | <code>string</code> | janis registered user email |
 | params.userId | <code>string</code> | registered user id |
+| params.language | <code>string</code> | language used in the application |
 | params.appVersion | <code>string</code> | app version in use |
 | params.screenName | <code>string</code> | screen where the action was called |
 | params.anotherKey... | <code>string</code> | any extra data that you want to be sent will be cataloged as dataEvent |
@@ -230,7 +232,7 @@ actionEvent({actionName:'button press',client: 'client',userEmail: 'janis@janis.
 ```
 <a name="customEvent"></a>
 
-## customEvent(eventName, params) ⇒ <code>boolean</code>
+## customEvent(eventName, params, customRequiredParams) ⇒ <code>boolean</code>
 allows to register a custom event, receives the name of the event to be registered and the associated data
 
 **Kind**: global function  
@@ -247,7 +249,9 @@ allows to register a custom event, receives the name of the event to be register
 | params.userEmail | <code>string</code> | janis registered user email |
 | params.userId | <code>string</code> | registered user id |
 | params.appVersion | <code>string</code> | app version in use |
+| params.language | <code>string</code> | user app language |
 | params.anotherKey... | <code>string</code> | any extra data that you want to be sent will be cataloged as dataEvent |
+| customRequiredParams | <code>Array.&lt;string&gt;</code> | any extra parameters that may be required for any custom event |
 
 **Example**  
 ```js
@@ -270,6 +274,11 @@ logs an event with information from the screen the user is viewing
 | --- | --- | --- |
 | screenName | <code>string</code> | Screen name the user is currently viewing. |
 | screenClass | <code>string</code> | Current class associated with the view the user is currently viewing. |
+| params.client | <code>string</code> | janis operating client |
+| params.userEmail | <code>string</code> | janis registered user email |
+| params.userId | <code>string</code> | registered user id |
+| params.language | <code>string</code> | language used in the application |
+| params.appVersion | <code>string</code> | app version in use |
 
 **Example**  
 ```js
