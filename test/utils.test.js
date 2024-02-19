@@ -1,3 +1,4 @@
+import requiredInitialData from '../lib/constant/requiredInitialData';
 import {
   formatValue,
   showErrorInDebug,
@@ -7,6 +8,7 @@ import {
   validObjectWithValues,
   promiseWrapper,
   includesAllProperties,
+  updateRequiredParams,
 } from '../lib/utils';
 
 describe('formatValue function', () => {
@@ -19,28 +21,43 @@ describe('formatValue function', () => {
   });
 });
 
+describe('updateRequiredParams function', () => {
+  describe('returns default required params when', () => {
+    it('received params is not a valid array', () => {
+      expect(updateRequiredParams({})).toBe(requiredInitialData);
+    });
+
+    it('received array is empty', () => {
+      expect(updateRequiredParams([])).toBe(requiredInitialData);
+    });
+  });
+
+  it('returns updated required params when receive a valid array with elements', () => {
+    expect(updateRequiredParams(['userName', 'screenName'])).toStrictEqual([
+      ...requiredInitialData,
+      'userName',
+      'screenName',
+    ]);
+  });
+});
+
 describe('validateRequiredStringParams function', () => {
   const validParams = {
     appVersion: '1.21.0',
     client: 'janis',
     userEmail: 'janis@janis.im',
+    userId: '1234',
+    language: 'en-US',
   };
 
   const validArray = ['appVersion', 'client', 'userEmail'];
 
   describe('should throw an error when', () => {
     it('receive invalid params', () => {
-      expect(() => validateRequiredStringParams({}, validArray)).toThrow(
+      expect(() => validateRequiredStringParams({})).toThrow(
         'params are required',
       );
     });
-
-    it('receive invalid array', () => {
-      expect(() => validateRequiredStringParams(validParams, [])).toThrow(
-        'required params were not defined',
-      );
-    });
-
     it('when some required params was not pass', () => {
       expect(() =>
         validateRequiredStringParams(
@@ -84,7 +101,10 @@ describe('splitRequiredAndRemainingParams function', () => {
   });
 
   it('returns an array with an object and the received params when not pass required params', () => {
-    expect(splitRequiredAndRemainingParams(params)).toStrictEqual([{}, params]);
+    expect(splitRequiredAndRemainingParams(params)).toStrictEqual([
+      {client: 'janis', userEmail: 'janis@janis.im'},
+      {rol: 'dev'},
+    ]);
   });
 
   it('returns an array with required and remaining params when pass required params', () => {
@@ -118,6 +138,7 @@ describe('formatBasicData function', () => {
     userId: '',
     client: '',
     appVersion: '',
+    language: '',
   };
   it('return an object with keys with empty values when not receives valid params', () => {
     expect(formatBasicData()).toStrictEqual(basicData);
@@ -128,6 +149,7 @@ describe('formatBasicData function', () => {
       userEmail: 'janis@janis.im',
       userId: 'janis12345',
       client: '',
+      language: '',
       appVersion: '1.22.0',
     });
   });
@@ -176,6 +198,11 @@ describe('promiseWrapper', () => {
 describe('includesAllProperties', () => {
   const invalidValues = [{}, []];
   const dataToCheck = {
+    client: 'janis',
+    appVersion: '1.22.0',
+    userEmail: 'user@janis.im',
+    userId: '1234',
+    language: 'en-us',
     name: 'janis',
     address: 'costa rica 4988',
     country: 'argentina',

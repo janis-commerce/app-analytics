@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+## [2.2.0] - 2024-02-19
+
+### Added
+
+- User data is now sent to analytics in screen view event
+
 ## [2.1.0] - 2024-01-25
 ### Added
 
