@@ -20,4 +20,14 @@ describe('screenViewEvent', () => {
 
     expect(eventResponse).toStrictEqual(true);
   });
+
+  it('register an event with extra params when pass an object with valid data', async () => {
+    const eventResponse = await screenViewEvent('screen name', 'screen class', {
+      client: 'janis',
+      userEmail: 'janis@janis.im',
+      userId: '12345',
+    });
+
+    expect(eventResponse).toStrictEqual(true);
+  });
 });
