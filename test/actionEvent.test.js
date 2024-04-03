@@ -11,6 +11,8 @@ describe('actionEvent method', () => {
     appVersion: '1.20.0',
     screenName: 'Home',
     language: 'EN-US',
+    connection: 'wifi',
+    deviceId: '12345',
   };
   describe('throws an error when', () => {
     it('not pass a valid object as an argument', async () => {

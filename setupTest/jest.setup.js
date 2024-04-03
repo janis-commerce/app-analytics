@@ -51,3 +51,13 @@ jest.mock('react-native-device-info', () => {
     ...RNDeviceInfo,
   };
 });
+
+jest.mock('@janiscommerce/app-device-info', () => ({
+  __esModule: true,
+  getDeviceModel: jest.fn(),
+  getOSVersion: jest.fn(),
+  getApplicationName: jest.fn(),
+  getDeviceScreenMeasurements: jest.fn(),
+  getNetworkState: jest.fn(),
+  getUniqueId: jest.fn(),
+}));

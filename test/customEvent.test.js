@@ -29,6 +29,8 @@ describe('customEvent method', () => {
         warehouse: 'Belgrano',
         rol: 'picker',
         language: 'EN-US',
+        connection: 'wifi',
+        deviceId: '12345',
       };
 
       const event = await customEvent('event_name', validParams);
@@ -50,6 +52,8 @@ describe('customEvent method', () => {
           warehouse: 'Belgrano',
           rol: 'picker',
           language: 'EN-US',
+          connection: 'wifi',
+          deviceId: '12345',
         };
 
         const event = await customEvent('event_name', validParams, {});
@@ -68,6 +72,8 @@ describe('customEvent method', () => {
           warehouse: 'Belgrano',
           rol: 'picker',
           language: 'EN-US',
+          connection: 'wifi',
+          deviceId: '12345',
         };
 
         const event = await customEvent('event_name', validParams, [

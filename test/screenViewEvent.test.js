@@ -26,6 +26,8 @@ describe('screenViewEvent', () => {
       client: 'janis',
       userEmail: 'janis@janis.im',
       userId: '12345',
+      connection: 'wifi',
+      deviceId: '12345',
     });
 
     expect(eventResponse).toStrictEqual(true);

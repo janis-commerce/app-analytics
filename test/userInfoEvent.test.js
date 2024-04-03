@@ -31,6 +31,8 @@ describe('userInfoEvent method', () => {
       osVersion: '12',
       userEmail: 'User_Name@janis.im',
       userId: '000123456789',
+      deviceId: '12345',
+      connection: 'wifi',
       language: 'ES-AR',
       client: 'janis',
       screenSize: {
@@ -52,6 +54,8 @@ describe('userInfoEvent method', () => {
       osVersion: '12',
       userEmail: 'User_Name@janis.im',
       userId: '000123456789',
+      deviceId: '12345',
+      connection: 'wifi',
       language: 'ES-AR',
       client: 'janis',
       screenSize: {
