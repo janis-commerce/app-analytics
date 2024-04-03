@@ -29,7 +29,7 @@
   "author": "Janis",
   "license": "ISC",
   "dependencies": {
-    "@janiscommerce/app-device-info": "^1.0.0",
+    "@janiscommerce/app-device-info": "^1.1.0",
     "@react-native-firebase/analytics": "^18.3.0",
     "@react-native-firebase/app": "^18.3.0",
     "react-native-app-auth": "^6.4.3",
