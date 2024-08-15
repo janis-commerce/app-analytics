@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+## [2.4.0] - 2024-08-15
+
+### Changed
+
+- Removed screenName as required parameter
+
 ## [2.3.0] - 2024-04-09
 
 ### Added
@@ -15,6 +21,7 @@
 - User data is now sent to analytics in screen view event
 
 ## [2.1.0] - 2024-01-25
+
 ### Added
 
 - Screen size is now sent to analytics
