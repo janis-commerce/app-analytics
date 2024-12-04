@@ -78,8 +78,13 @@ describe('validateRequiredStringParams function', () => {
 });
 
 describe('showErrorInDebug function', () => {
+  afterEach(() => {
+    delete process.env.NODE_ENV;
+  });
+
   it('return null', () => {
-    expect(showErrorInDebug({message: 'message'}, true)).toStrictEqual(null);
+    process.env.NODE_ENV = 'production';
+    expect(showErrorInDebug({message: 'message'})).toStrictEqual(null);
   });
 });
 

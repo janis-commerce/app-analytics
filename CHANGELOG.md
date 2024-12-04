@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+## [2.5.0] - 2024-12-05
+
+### Changed
+
+- Changed way of controlling debug mode, now you decide whether to show console errors from outside the package. - [APPSRN-346](https://janiscommerce.atlassian.net/browse/APPSRN-346)
+
 ## [2.4.0] - 2024-08-15
 
 ### Changed
