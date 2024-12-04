@@ -1,14 +1,10 @@
 import customEvent from '../lib/customEvent';
-import * as utils from '../lib/utils';
 
 describe('customEvent method', () => {
   const invalidArgument = [];
 
   describe('thows an error when', () => {
-    const mockedDevEnv = jest.spyOn(utils, 'isDevEnv');
-
     it('not pass a valid string as an eventName argument', async () => {
-      mockedDevEnv.mockReturnValueOnce(false);
       expect(await customEvent(invalidArgument, {})).toBe(false);
     });
 

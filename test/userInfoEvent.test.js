@@ -1,11 +1,8 @@
 import userInfoEvent from '../lib/userInfoEvent';
-import * as utils from '../lib/utils';
 
 describe('userInfoEvent method', () => {
   describe('returns an error when', () => {
-    const mockedDevEnv = jest.spyOn(utils, 'isDevEnv');
     it('not receive a valid object as argument', async () => {
-      mockedDevEnv.mockReturnValueOnce(false);
       expect(await userInfoEvent({})).toBe(false);
     });
     it('not pass an object with valid data', async () => {
