@@ -3,7 +3,7 @@ import userInfoEvent from '../lib/userInfoEvent';
 describe('userInfoEvent method', () => {
   describe('returns an error when', () => {
     it('not receive a valid object as argument', async () => {
-      expect(await userInfoEvent({})).toBe(false);
+      expect(await userInfoEvent({}, true)).toBe(false);
     });
     it('not pass an object with valid data', async () => {
       const eventData = {

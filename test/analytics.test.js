@@ -119,7 +119,10 @@ describe('Analytics class', () => {
 
       spyGetUserInfo.mockRejectedValueOnce('getUserInfo failed');
 
-      const analytics = new Analytics({appVersion: '1.22.0.0'});
+      const analytics = new Analytics({
+        appVersion: '1.22.0.0',
+        isDebugMode: true,
+      });
 
       expect(await analytics.initialize('1.22.0.0')).toStrictEqual({
         appVersion: '1.22.0.0',

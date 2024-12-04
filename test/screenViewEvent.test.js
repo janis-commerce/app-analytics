@@ -9,6 +9,10 @@ describe('screenViewEvent', () => {
     it('not receive a valid screenName argument', async () => {
       expect(await screenViewEvent(2323)).toBe(false);
     });
+
+    it('not receive a valid screenName argument and isDebugMode', async () => {
+      expect(await screenViewEvent(2323, '', '', true)).toBe(false);
+    });
   });
 
   it('register an event when pass an object with valid data', async () => {
