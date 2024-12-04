@@ -1,6 +1,8 @@
 import actionEvent from '../lib/actionEvent';
+import * as utils from '../lib/utils';
 
 describe('actionEvent method', () => {
+  const mockedDevEnv = jest.spyOn(utils, 'isDevEnv');
   const validParams = {
     actionName: 'button Press',
     client: 'janis',
@@ -14,10 +16,12 @@ describe('actionEvent method', () => {
   };
   describe('throws an error when', () => {
     it('not pass a valid object as an argument', async () => {
+      mockedDevEnv.mockReturnValueOnce(false);
       expect(await actionEvent({})).toBe(false);
     });
 
     it('not pass all required data or this hasnt value', async () => {
+      mockedDevEnv.mockReturnValueOnce(true);
       expect(
         await actionEvent({
           actionName: 'buttonPress',
