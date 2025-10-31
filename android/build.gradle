@@ -20,6 +20,12 @@ buildscript {
     }
 }
 
+android {
+    namespace "com.appanalytics"
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+}
+
 allprojects {
     repositories {
         maven {
