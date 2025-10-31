@@ -43,14 +43,13 @@ jest.mock('@janiscommerce/oauth-native', () => ({
   }),
 }));
 
-jest.mock('react-native-device-info', () => {
-  const RNDeviceInfo = jest.requireActual(
-    'react-native-device-info/jest/react-native-device-info-mock',
-  );
-  return {
-    ...RNDeviceInfo,
-  };
-});
+jest.mock('react-native-device-info', () => ({
+  getDeviceId: jest.fn(),
+  getModel: jest.fn(),
+  getSystemVersion: jest.fn(),
+  getApplicationName: jest.fn(),
+  getUniqueId: jest.fn(),
+}), { virtual: true });
 
 jest.mock('@janiscommerce/app-device-info', () => ({
   __esModule: true,
