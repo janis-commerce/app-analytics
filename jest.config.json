@@ -46,6 +46,6 @@
     "\\.(css|less)$": "identity-obj-proxy"
   },
   "transformIgnorePatterns": [
-    "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*'|@react-native-firebase/analytics|@react-native-firebase/app)"
+    "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@react-native-firebase/analytics|@react-native-firebase/app)"
   ]
 }
