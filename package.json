@@ -37,7 +37,7 @@
     "@react-native-firebase/analytics": "^21.6.1",
     "@react-native-firebase/app": "^21.6.1",
     "react": ">=17.0.2 <20.0.0",
-    "react-native": ">=0.73.0 <0.82.0"
+    "react-native": ">=0.71.5 <0.82.0"
   },
   "devDependencies": {
     "@babel/core": "^7.22.10",
