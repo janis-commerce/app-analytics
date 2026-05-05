@@ -2,6 +2,24 @@
 
 ## [Unreleased]
 
+## [3.0.0] - 2026-05-05
+
+### Breaking Changes
+
+- Firebase peer dependency upgraded to `^21.6.1` (previously `^18.9.0`). Consumers must upgrade `@react-native-firebase/app` and `@react-native-firebase/analytics` to v21+.
+- React Native peer dependency range changed to `>=0.71.5 <0.82.0` (previously `>=0.67.5 <0.75.0`). Apps on RN < 0.71.5 are no longer supported.
+- `userProfile` is now a required field. If the oauth token does not provide `profileName`, analytics events will not be sent. - [APPSRN-465](https://janiscommerce.atlassian.net/browse/APPSRN-465)
+
+### Added
+
+- Added support for React Native 0.80.2. - [APPSRN-465](https://janiscommerce.atlassian.net/browse/APPSRN-465)
+- Added `userProfile` field to all analytics events, extracted from the oauth token's `profileName`. - [APPSRN-465](https://janiscommerce.atlassian.net/browse/APPSRN-465)
+
+### Changed
+
+- Modernized `android/build.gradle` to use the `safeExtGet` pattern, SDK 35, and Java 17.
+- Widened react peer dependency range to support React 19 (`>=17.0.2 <20.0.0`).
+
 ## [2.6.0] - 2024-11-05
 
 ### Added
