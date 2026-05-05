@@ -13,6 +13,7 @@ describe('actionEvent method', () => {
     language: 'EN-US',
     connection: 'wifi',
     deviceId: '12345',
+    userProfile: 'Admin',
   };
   describe('throws an error when', () => {
     it('not pass a valid object as an argument', async () => {

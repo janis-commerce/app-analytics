@@ -79,6 +79,7 @@ describe('Anaylytics class', () => {
         language: 'language',
         connection: 'wifi',
         deviceId: '12345',
+        userProfile: 'Admin',
       });
 
       expect(await analytics.initialize('1.22.0.0')).toStrictEqual({
@@ -89,6 +90,7 @@ describe('Anaylytics class', () => {
         language: 'language',
         connection: 'wifi',
         deviceId: '12345',
+        userProfile: 'Admin',
       });
     });
 
@@ -111,6 +113,7 @@ describe('Anaylytics class', () => {
         userId: '5fd7b2c8d71fb1e2743bb64e',
         connection: 'wifi',
         deviceId: '12345',
+        userProfile: 'Admin',
       });
     });
 
@@ -166,6 +169,7 @@ describe('Anaylytics class', () => {
         language: 'EN-US',
         connection: 'wifi',
         deviceId: '12345',
+        userProfile: 'Admin',
       });
 
       await analytics.sendUserInfo();
@@ -191,6 +195,7 @@ describe('Anaylytics class', () => {
         language: 'EN-US',
         connection: 'wifi',
         deviceId: '12345',
+        userProfile: 'Admin',
         isDebugMode: true,
       });
 
@@ -217,6 +222,7 @@ describe('Anaylytics class', () => {
         language: 'EN-US',
         connection: 'wifi',
         deviceId: '12345',
+        userProfile: 'Admin',
       });
 
       await analytics.sendUserInfo();
@@ -257,6 +263,7 @@ describe('Anaylytics class', () => {
         language: 'EN-US',
         connection: 'wifi',
         deviceId: '12345',
+        userProfile: 'Admin',
       });
 
       await analytics.sendAction('on press button', []);
@@ -280,6 +287,7 @@ describe('Anaylytics class', () => {
         language: 'EN-US',
         connection: 'wifi',
         deviceId: '12345',
+        userProfile: 'Admin',
       });
 
       await analytics.sendAction('on press button', 'Home', {
@@ -305,6 +313,7 @@ describe('Anaylytics class', () => {
         language: 'EN-US',
         connection: 'wifi',
         deviceId: '12345',
+        userProfile: 'Admin',
         isDebugMode: true,
       });
 
@@ -346,6 +355,7 @@ describe('Anaylytics class', () => {
         language: 'EN-US',
         connection: 'wifi',
         deviceId: '12345',
+        userProfile: 'Admin',
       });
 
       await analytics.sendCustomEvent(
@@ -376,6 +386,7 @@ describe('Anaylytics class', () => {
         language: 'EN-US',
         connection: 'wifi',
         deviceId: '12345',
+        userProfile: 'Admin',
         isDebugMode: true,
       });
 
@@ -405,6 +416,7 @@ describe('Anaylytics class', () => {
         language: 'EN-US',
         connection: 'wifi',
         deviceId: '12345',
+        userProfile: 'Admin',
       });
 
       await analytics.sendCustomEvent('customTest', 'testing value');
@@ -443,6 +455,7 @@ describe('Anaylytics class', () => {
         language: 'EN-US',
         connection: 'wifi',
         deviceId: '12345',
+        userProfile: 'Admin',
       });
 
       await analytics.sendScreenTracking('Home', 'Home');
@@ -466,6 +479,7 @@ describe('Anaylytics class', () => {
         language: 'EN-US',
         connection: 'wifi',
         deviceId: '12345',
+        userProfile: 'Admin',
         isDebugMode: true,
       });
 
@@ -502,6 +516,7 @@ describe('Anaylytics class', () => {
         language: 'EN-US',
         connection: 'wifi',
         deviceId: '12345',
+        userProfile: 'Admin',
       });
 
       await analytics.sendScreenTracking('Home', 'Home');

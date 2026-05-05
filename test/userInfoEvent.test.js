@@ -35,6 +35,7 @@ describe('userInfoEvent method', () => {
       connection: 'wifi',
       language: 'ES-AR',
       client: 'janis',
+      userProfile: 'Admin',
       screenSize: {
         screenWidth: '480',
         screenHeight: '840',
@@ -58,6 +59,7 @@ describe('userInfoEvent method', () => {
       connection: 'wifi',
       language: 'ES-AR',
       client: 'janis',
+      userProfile: 'Admin',
       screenSize: {
         screenWidth: '480',
         screenHeight: '840',

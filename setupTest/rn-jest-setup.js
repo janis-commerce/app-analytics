@@ -3,8 +3,6 @@
  * Based on react-native/jest/setup.js but modified for Node 18+
  */
 
-'use strict';
-
 // Fix for Node 18+ where performance is read-only
 if (global.performance) {
   try {

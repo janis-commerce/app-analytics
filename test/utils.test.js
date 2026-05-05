@@ -50,6 +50,7 @@ describe('validateRequiredStringParams function', () => {
     language: 'en-US',
     deviceId: '12345',
     connection: 'wifi',
+    userProfile: 'Admin',
   };
 
   const validArray = ['appVersion', 'client', 'userEmail'];
@@ -143,6 +144,7 @@ describe('formatBasicData function', () => {
     language: '',
     connection: '',
     deviceId: '',
+    userProfile: '',
   };
   it('return an object with keys with empty values when not receives valid params', () => {
     expect(formatBasicData()).toStrictEqual(basicData);
@@ -157,6 +159,7 @@ describe('formatBasicData function', () => {
       appVersion: '1.22.0',
       connection: '',
       deviceId: '',
+      userProfile: '',
     });
   });
 });
@@ -214,6 +217,7 @@ describe('includesAllProperties', () => {
     country: 'argentina',
     connection: 'wifi',
     deviceId: 'sams12345-0',
+    userProfile: 'Admin',
   };
   describe('returns false if', () => {
     it('not receive a valid object as first argument', () => {

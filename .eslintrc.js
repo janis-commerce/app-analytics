@@ -35,4 +35,14 @@ module.exports = {
     'no-param-reassign': 'off',
     'no-console': 'off',
   },
+  overrides: [
+    {
+      files: ['setupTest/**/*.js', '__mocks__/**/*.js'],
+      rules: {
+        'no-underscore-dangle': 'off',
+        'func-names': 'off',
+        'import/no-extraneous-dependencies': 'off',
+      },
+    },
+  ],
 };
