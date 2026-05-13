@@ -2,16 +2,19 @@
 
 jest.mock('react-native/Libraries/EventEmitter/NativeEventEmitter');
 
-jest.mock('@react-native-firebase/analytics', () =>
-  jest.fn().mockImplementation(() => ({
+jest.mock('@react-native-firebase/analytics', () => {
+  const mockInstance = {
     logEvent: jest.fn(),
     logScreenView: jest.fn(),
-  })),
-);
+    setUserId: jest.fn(),
+    setUserProperties: jest.fn(),
+  };
+  return jest.fn().mockReturnValue(mockInstance);
+});
 
 jest.mock('@janiscommerce/oauth-native', () => ({
   __esModule: true,
-  getUserInfo: jest.fn().mockReturnValue({
+  getUserInfo: jest.fn().mockResolvedValue({
     appClientId: 'abcd1234-1234-g4g4-828b-BFAS2121fjA',
     aud: 'abcd1234-1234-g4g4-828b-BFAS2121fjA',
     createdAt: '2020-12-14T18:45:28.306Z',

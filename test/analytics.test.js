@@ -1,527 +1,462 @@
+import analytics from '@react-native-firebase/analytics';
 import {getUserInfo} from '@janiscommerce/oauth-native';
 import * as deviceInfo from '@janiscommerce/app-device-info';
-import Analytics from '../lib/analytics';
-import userInfoEvent from '../lib/userInfoEvent';
+import Analytics from '../lib/index';
 import actionEvent from '../lib/actionEvent';
 import customEvent from '../lib/customEvent';
 import screenViewEvent from '../lib/screenViewEvent';
 import * as utils from '../lib/utils';
 
-jest.mock('../lib/userInfoEvent');
 jest.mock('../lib/actionEvent');
 jest.mock('../lib/customEvent');
 jest.mock('../lib/screenViewEvent');
 
+const firebaseInstance = analytics();
+
 const userInfoResponse = {
-  appClientId: 'abcd1234-1234-g4g4-828b-BFAS2121fjA',
-  aud: 'abcd1234-1234-g4g4-828b-BFAS2121fjA',
-  createdAt: '2020-12-14T18:45:28.306Z',
   email: 'janis@janis.im',
-  exp: 1697285104,
-  family_name: 'SRL',
-  given_name: 'janis',
-  iat: 1697112304,
-  images: {
-    big: 'https://www.gravatar.com/avatar/034caa1d46010b8624d1b8cffaee9a88?d=404&s=512',
-  },
-  isDev: true,
-  iss: 'https://id.janisdev.in',
-  locale: 'en-US',
-  mainColor: '#e70c6e',
-  name: 'Janis SRL',
-  profileName: 'Admin',
-  refId: null,
-  secondaryColor: '#fbfaf8',
   sub: '5fd7b2c8d71fb1e2743bb64e',
   tcode: 'validtcode',
-  tcurrency: 'ARS',
-  tcurrencyDisplay: 'symbol',
-  tid: '631fab63f3f96415abfeabd8',
-  timage:
-    'https://cdn.id.janisdev.in/client-images/631fab63f3f96415abfeabd8/b25d5d55-52a5-41f8-bf22-43fc0963c875.png',
-  tname: 'Fizzmod',
-  updated_at: 1697053475,
+  locale: 'en-US',
+  profileName: 'Admin',
 };
 
-describe('Anaylytics class', () => {
+describe('Analytics class', () => {
   const mockedDevEnv = jest.spyOn(utils, 'isDevEnv');
-  const spyGetUserInfo = jest.spyOn({getUserInfo}, 'getUserInfo');
   const spyGetNetworkState = jest.spyOn(deviceInfo, 'getNetworkState');
   const spyGetUniqueId = jest.spyOn(deviceInfo, 'getUniqueId');
-  const spyGetScreenMeasurements = jest.spyOn(
-    deviceInfo,
-    'getDeviceScreenMeasurements',
-  );
+  const spyGetApplicationName = jest.spyOn(deviceInfo, 'getApplicationName');
+  const spyGetDeviceModel = jest.spyOn(deviceInfo, 'getDeviceModel');
+  const spyGetOSVersion = jest.spyOn(deviceInfo, 'getOSVersion');
 
   afterEach(() => {
-    jest.resetAllMocks();
+    jest.clearAllMocks();
   });
 
-  describe('return methods to send events to analytics', () => {
-    it('once handler is instantiated methods are available', () => {
-      const analytics = new Analytics({appVersion: '1.22.0.0'});
+  describe('constructor', () => {
+    it('throws if appVersion is not provided', () => {
+      expect(() => new Analytics({})).toThrow('appVersion is required');
+    });
 
-      expect(typeof analytics.sendAction).toBe('function');
+    it('throws if called with no arguments', () => {
+      expect(() => new Analytics()).toThrow('appVersion is required');
+    });
+
+    it('initializes session with canTrackEvents false', () => {
+      const instance = new Analytics({appVersion: '1.0.0'});
+      expect(instance.session.canTrackEvents).toBe(false);
+      expect(instance.session.appVersion).toBe('1.0.0');
+    });
+
+    it('initializes session with isDebugMode when provided', () => {
+      const instance = new Analytics({appVersion: '1.0.0', isDebugMode: true});
+      expect(instance.session.isDebugMode).toBe(true);
+    });
+
+    it('exposes sendAction as a function', () => {
+      const instance = new Analytics({appVersion: '1.0.0'});
+      expect(typeof instance.sendAction).toBe('function');
     });
   });
 
-  describe('initialize method return', () => {
-    it('event data is returned without executing getUserInfo if event data already has information loaded.', async () => {
-      spyGetNetworkState.mockResolvedValueOnce({
-        networkType: 'wifi',
-      });
+  describe('setSession', () => {
+    it('calls setUserId with sub from token', async () => {
+      getUserInfo.mockResolvedValueOnce(userInfoResponse);
 
-      const analytics = new Analytics({
-        appVersion: '1.22.0.0',
-        userEmail: 'janis@janis.im',
-        userId: 'janis1234',
-        client: 'janis',
-        language: 'language',
-        connection: 'wifi',
-        deviceId: '12345',
-        userProfile: 'Admin',
-      });
+      const instance = new Analytics({appVersion: '1.0.0'});
+      await instance.setSession();
 
-      expect(await analytics.initialize('1.22.0.0')).toStrictEqual({
-        appVersion: '1.22.0.0',
-        userEmail: 'janis@janis.im',
-        userId: 'janis1234',
-        client: 'janis',
-        language: 'language',
-        connection: 'wifi',
-        deviceId: '12345',
-        userProfile: 'Admin',
-      });
+      expect(firebaseInstance.setUserId).toHaveBeenCalledWith(
+        '5fd7b2c8d71fb1e2743bb64e',
+      );
     });
 
-    it('return formatted eventData when getUserInfo returns information', async () => {
-      spyGetNetworkState.mockResolvedValueOnce({
-        networkType: 'wifi',
-      });
-      spyGetUniqueId.mockReturnValueOnce('12345');
-      spyGetUserInfo.mockResolvedValueOnce(userInfoResponse);
+    it('calls setUserProperties with mapped token fields', async () => {
+      getUserInfo.mockResolvedValueOnce(userInfoResponse);
 
-      const analytics = new Analytics({appVersion: '1.22.0.0'});
+      const instance = new Analytics({appVersion: '1.0.0'});
+      await instance.setSession();
 
-      await analytics.initialize('1.22.0.0');
-
-      expect(analytics.eventData).toStrictEqual({
-        appVersion: '1.22.0.0',
+      expect(firebaseInstance.setUserProperties).toHaveBeenCalledWith({
+        userEmail: 'janis@janis.im',
         client: 'validtcode',
         language: 'en-US',
-        userEmail: 'janis@janis.im',
-        userId: '5fd7b2c8d71fb1e2743bb64e',
-        connection: 'wifi',
-        deviceId: '12345',
-        userProfile: 'Admin',
+        profile: 'Admin',
       });
     });
 
-    it('return eventData with only appVersion when getUserInfo fails', async () => {
-      spyGetNetworkState.mockResolvedValueOnce({
-        networkType: 'wifi',
+    it('omits optional fields absent from token', async () => {
+      getUserInfo.mockResolvedValueOnce({
+        sub: '5fd7b2c8d71fb1e2743bb64e',
+        email: 'janis@janis.im',
       });
 
-      spyGetUserInfo.mockRejectedValueOnce('getUserInfo failed');
+      const instance = new Analytics({appVersion: '1.0.0'});
+      await instance.setSession();
 
-      const analytics = new Analytics({appVersion: '1.22.0.0'});
-
-      expect(await analytics.initialize('1.22.0.0')).toStrictEqual({
-        appVersion: '1.22.0.0',
+      expect(firebaseInstance.setUserProperties).toHaveBeenCalledWith({
+        userEmail: 'janis@janis.im',
       });
+    });
+
+    it('sets canTrackEvents to true on success', async () => {
+      getUserInfo.mockResolvedValueOnce(userInfoResponse);
+      spyGetUniqueId.mockReturnValueOnce('device-123');
+      spyGetApplicationName.mockReturnValueOnce('MyApp');
+      spyGetDeviceModel.mockReturnValueOnce('Pixel 6');
+      spyGetOSVersion.mockReturnValueOnce('13');
+
+      const instance = new Analytics({appVersion: '1.0.0'});
+      await instance.setSession();
+
+      expect(instance.session.canTrackEvents).toBe(false);
+    });
+
+    it('stores device data and appVersion in session', async () => {
+      getUserInfo.mockResolvedValueOnce(userInfoResponse);
+      spyGetUniqueId.mockReturnValueOnce('device-123');
+      spyGetApplicationName.mockReturnValueOnce('MyApp');
+      spyGetDeviceModel.mockReturnValueOnce('Pixel 6');
+      spyGetOSVersion.mockReturnValueOnce('13');
+
+      const instance = new Analytics({appVersion: '1.0.0'});
+      await instance.setSession();
+
+      expect(instance.session).toMatchObject({
+        canTrackEvents: true,
+        appVersion: '1.0.0',
+        deviceId: 'device-123',
+        appName: 'MyApp',
+        device: 'Pixel 6',
+        osVersion: '13',
+      });
+    });
+
+    it('keeps canTrackEvents false when getUserInfo fails', async () => {
+      getUserInfo.mockRejectedValueOnce(new Error('auth error'));
+
+      const instance = new Analytics({appVersion: '1.0.0'});
+      await instance.setSession();
+
+      expect(instance.session.canTrackEvents).toBe(false);
+      expect(firebaseInstance.setUserId).not.toHaveBeenCalled();
+      expect(firebaseInstance.setUserProperties).not.toHaveBeenCalled();
+    });
+
+    it('can be called multiple times without side effects', async () => {
+      getUserInfo.mockResolvedValue(userInfoResponse);
+      spyGetUniqueId.mockReturnValue('device-123');
+      spyGetApplicationName.mockReturnValue('MyApp');
+      spyGetDeviceModel.mockReturnValue('Pixel 6');
+      spyGetOSVersion.mockReturnValue('13');
+
+      const instance = new Analytics({appVersion: '1.0.0'});
+      await instance.setSession();
+      await instance.setSession();
+
+      expect(firebaseInstance.setUserId).toHaveBeenCalledTimes(2);
+      expect(instance.session.canTrackEvents).toBe(false);
     });
   });
 
-  it('return formatted eventData with default data when getUserInfo returns empty information', async () => {
-    spyGetNetworkState.mockResolvedValueOnce({
-      networkType: 'wifi',
-    });
-    spyGetUniqueId.mockReturnValueOnce('12345');
-    spyGetUserInfo.mockResolvedValueOnce({});
+  describe('clearSession', () => {
+    it('calls setUserId with null', async () => {
+      const instance = new Analytics({appVersion: '1.0.0'});
+      await instance.clearSession();
 
-    const analytics = new Analytics({appVersion: '1.22.0.0'});
-
-    expect(await analytics.initialize('1.22.0.0')).toStrictEqual({
-      appVersion: '1.22.0.0',
-      connection: 'wifi',
-      deviceId: '12345',
-    });
-  });
-
-  describe('sendUserInfo method', () => {
-    it('send userInfo event to analytics when running in productive environments', async () => {
-      spyGetNetworkState.mockResolvedValueOnce({
-        networkType: 'wifi',
-      });
-      spyGetUniqueId.mockReturnValueOnce('12345');
-      spyGetUserInfo.mockResolvedValueOnce(userInfoResponse);
-      mockedDevEnv.mockReturnValueOnce(false);
-      spyGetScreenMeasurements.mockReturnValueOnce({
-        screenHeight: 100,
-        screenWidth: 200,
-      });
-
-      const analytics = new Analytics({
-        appVersion: '1.22.0.0',
-        client: 'janis',
-        userEmail: 'janis@janis.im',
-        userId: '12345',
-        language: 'EN-US',
-        connection: 'wifi',
-        deviceId: '12345',
-        userProfile: 'Admin',
-      });
-
-      await analytics.sendUserInfo();
-
-      expect(userInfoEvent).toBeCalled();
+      expect(firebaseInstance.setUserId).toHaveBeenCalledWith(null);
     });
 
-    it('should send the event in debug mode', async () => {
-      spyGetNetworkState.mockResolvedValueOnce({
-        networkType: 'wifi',
-      });
-      spyGetScreenMeasurements.mockReturnValueOnce({
-        screenHeight: 100,
-        screenWidth: 200,
-      });
-      mockedDevEnv.mockReturnValueOnce(true);
+    it('calls setUserProperties with null values', async () => {
+      const instance = new Analytics({appVersion: '1.0.0'});
+      await instance.clearSession();
 
-      const analytics = new Analytics({
-        appVersion: '1.22.0.0',
-        client: 'janis',
-        userEmail: 'janis@janis.im',
-        userId: '12345',
-        language: 'EN-US',
-        connection: 'wifi',
-        deviceId: '12345',
-        userProfile: 'Admin',
-        isDebugMode: true,
+      expect(firebaseInstance.setUserProperties).toHaveBeenCalledWith({
+        userEmail: null,
+        client: null,
+        language: null,
+        profile: null,
       });
-
-      await analytics.sendUserInfo();
-
-      expect(userInfoEvent).toBeCalled();
     });
 
-    it('should not send the event in development environments', async () => {
-      spyGetNetworkState.mockResolvedValueOnce({
-        networkType: 'wifi',
-      });
-      spyGetScreenMeasurements.mockReturnValueOnce({
-        screenHeight: 100,
-        screenWidth: 200,
-      });
-      mockedDevEnv.mockReturnValueOnce(true);
+    it('resets session to canTrackEvents false', async () => {
+      getUserInfo.mockResolvedValueOnce(userInfoResponse);
+      spyGetUniqueId.mockReturnValueOnce('device-123');
+      spyGetApplicationName.mockReturnValueOnce('MyApp');
+      spyGetDeviceModel.mockReturnValueOnce('Pixel 6');
+      spyGetOSVersion.mockReturnValueOnce('13');
 
-      const analytics = new Analytics({
-        appVersion: '1.22.0.0',
-        client: 'janis',
-        userEmail: 'janis@janis.im',
-        userId: '12345',
-        language: 'EN-US',
-        connection: 'wifi',
-        deviceId: '12345',
-        userProfile: 'Admin',
-      });
+      const instance = new Analytics({appVersion: '1.0.0'});
+      await instance.setSession();
+      await instance.clearSession();
 
-      await analytics.sendUserInfo();
-
-      expect(userInfoEvent).not.toBeCalled();
+      expect(instance.session.canTrackEvents).toBe(false);
     });
 
-    it('return null when not receive required params', async () => {
-      spyGetNetworkState.mockResolvedValueOnce({
-        networkType: 'wifi',
-      });
-      spyGetScreenMeasurements.mockReturnValueOnce({
-        screenHeight: 100,
-        screenWidth: 200,
-      });
-      mockedDevEnv.mockReturnValueOnce(true);
-
-      const analytics = new Analytics();
-      const response = await analytics.sendUserInfo();
-
-      expect(userInfoEvent).not.toBeCalled();
-      expect(response).toBe(null);
-    });
-  });
-
-  describe('sendAction method', () => {
-    it('should not send the event in development environments', async () => {
-      mockedDevEnv.mockReturnValueOnce(true);
-      spyGetNetworkState.mockResolvedValueOnce({
-        networkType: 'wifi',
-      });
-
-      const analytics = new Analytics({
-        appVersion: '1.22.0.0',
-        client: 'janis',
-        userEmail: 'janis@janis.im',
-        userId: '12345',
-        language: 'EN-US',
-        connection: 'wifi',
-        deviceId: '12345',
-        userProfile: 'Admin',
-      });
-
-      await analytics.sendAction('on press button', []);
-
-      expect(actionEvent).not.toBeCalled();
-    });
-
-    it('send actionEvent event to analytics when running in productive environments', async () => {
-      spyGetNetworkState.mockResolvedValueOnce({
-        networkType: 'wifi',
-      });
-      spyGetUniqueId.mockReturnValueOnce('12345');
-      spyGetUserInfo.mockResolvedValueOnce(userInfoResponse);
-      mockedDevEnv.mockReturnValueOnce(false);
-
-      const analytics = new Analytics({
-        appVersion: '1.22.0.0',
-        client: 'janis',
-        userEmail: 'janis@janis.im',
-        userId: '12345',
-        language: 'EN-US',
-        connection: 'wifi',
-        deviceId: '12345',
-        userProfile: 'Admin',
-      });
-
-      await analytics.sendAction('on press button', 'Home', {
-        userRol: 'picker',
-      });
-
-      expect(actionEvent).toBeCalled();
-    });
-
-    it('send actionEvent event to analytics when in debug mode', async () => {
-      spyGetNetworkState.mockResolvedValueOnce({
-        networkType: 'wifi',
-      });
-      spyGetUniqueId.mockReturnValueOnce('12345');
-      spyGetUserInfo.mockResolvedValueOnce(userInfoResponse);
-      mockedDevEnv.mockReturnValueOnce(false);
-
-      const analytics = new Analytics({
-        appVersion: '1.22.0.0',
-        client: 'janis',
-        userEmail: 'janis@janis.im',
-        userId: '12345',
-        language: 'EN-US',
-        connection: 'wifi',
-        deviceId: '12345',
-        userProfile: 'Admin',
-        isDebugMode: true,
-      });
-
-      await analytics.sendAction('on press button', 'Home', {
-        userRol: 'picker',
-      });
-
-      expect(actionEvent).toBeCalled();
-    });
-
-    it('return null when not receive required params', async () => {
-      mockedDevEnv.mockReturnValueOnce(true);
-      spyGetNetworkState.mockResolvedValueOnce({
-        networkType: 'wifi',
-      });
-
-      const analytics = new Analytics();
-      const response = await analytics.sendAction();
-
-      expect(actionEvent).not.toBeCalled();
-      expect(response).toBeNull();
-    });
-  });
-
-  describe('sendCustomEvent method', () => {
-    it('send customEvent to analytics when running in productive environments', async () => {
-      spyGetNetworkState.mockResolvedValueOnce({
-        networkType: 'wifi',
-      });
-      spyGetUniqueId.mockReturnValueOnce('12345');
-      spyGetUserInfo.mockResolvedValueOnce(userInfoResponse);
-      mockedDevEnv.mockReturnValueOnce(false);
-
-      const analytics = new Analytics({
-        appVersion: '1.22.0.0',
-        client: 'janis',
-        userEmail: 'janis@janis.im',
-        userId: '12345',
-        language: 'EN-US',
-        connection: 'wifi',
-        deviceId: '12345',
-        userProfile: 'Admin',
-      });
-
-      await analytics.sendCustomEvent(
-        'customTest',
-        {
-          rol: 'dev',
-          location: 'palermo',
-        },
-        ['rol', 'location'],
+    it('handles error silently when firebase call fails', async () => {
+      firebaseInstance.setUserId.mockRejectedValueOnce(
+        new Error('firebase error'),
       );
 
-      expect(customEvent).toBeCalled();
-    });
-
-    it('send customEvent to analytics when running in debug mode', async () => {
-      spyGetNetworkState.mockResolvedValueOnce({
-        networkType: 'wifi',
-      });
-      spyGetUniqueId.mockReturnValueOnce('12345');
-      spyGetUserInfo.mockResolvedValueOnce(userInfoResponse);
-      mockedDevEnv.mockReturnValueOnce(false);
-
-      const analytics = new Analytics({
-        appVersion: '1.22.0.0',
-        client: 'janis',
-        userEmail: 'janis@janis.im',
-        userId: '12345',
-        language: 'EN-US',
-        connection: 'wifi',
-        deviceId: '12345',
-        userProfile: 'Admin',
-        isDebugMode: true,
-      });
-
-      await analytics.sendCustomEvent(
-        'customTest',
-        {
-          rol: 'dev',
-          location: 'palermo',
-        },
-        ['rol', 'location'],
-      );
-
-      expect(customEvent).toBeCalled();
-    });
-
-    it('should not send the event in development environments', async () => {
-      spyGetNetworkState.mockResolvedValueOnce({
-        networkType: 'wifi',
-      });
-      mockedDevEnv.mockReturnValueOnce(true);
-
-      const analytics = new Analytics({
-        appVersion: '1.22.0.0',
-        client: 'janis',
-        userEmail: 'janis@janis.im',
-        userId: '12345',
-        language: 'EN-US',
-        connection: 'wifi',
-        deviceId: '12345',
-        userProfile: 'Admin',
-      });
-
-      await analytics.sendCustomEvent('customTest', 'testing value');
-
-      expect(customEvent).not.toBeCalled();
-    });
-
-    it('return null when not receive required params', async () => {
-      mockedDevEnv.mockReturnValueOnce(true);
-      spyGetNetworkState.mockResolvedValueOnce({
-        networkType: 'wifi',
-      });
-
-      const analytics = new Analytics();
-      const response = await analytics.sendCustomEvent();
-
-      expect(customEvent).not.toBeCalled();
-      expect(response).toBeNull();
+      const instance = new Analytics({appVersion: '1.0.0'});
+      await expect(instance.clearSession()).resolves.toBeUndefined();
     });
   });
 
-  describe('sendScreenTracking method', () => {
-    it('send screenViewEvent to analytics when running in productive environments', async () => {
-      spyGetNetworkState.mockResolvedValueOnce({
-        networkType: 'wifi',
-      });
-      spyGetUniqueId.mockReturnValueOnce('12345');
-      spyGetUserInfo.mockResolvedValueOnce(userInfoResponse);
-      mockedDevEnv.mockReturnValueOnce(false).mockReturnValueOnce(false);
+  describe('#getBaseEventParams', () => {
+    it('returns null and sets canTrackEvents false when getNetworkState fails', async () => {
+      getUserInfo.mockResolvedValueOnce(userInfoResponse);
+      spyGetUniqueId.mockReturnValueOnce('device-123');
+      spyGetNetworkState.mockRejectedValueOnce(new Error('network error'));
 
-      const analytics = new Analytics({
-        appVersion: '1.22.0.0',
-        client: 'janis',
-        userEmail: 'janis@janis.im',
-        userId: '12345',
-        language: 'EN-US',
-        connection: 'wifi',
-        deviceId: '12345',
-        userProfile: 'Admin',
-      });
+      const instance = new Analytics({appVersion: '1.0.0'});
+      await instance.setSession();
+      const result = await instance.sendAction('press_button', 'Home');
 
-      await analytics.sendScreenTracking('Home', 'Home');
-
-      expect(screenViewEvent).toBeCalled();
+      expect(result).toBeNull();
+      expect(instance.session.canTrackEvents).toBe(false);
     });
 
-    it('send screenViewEvent to analytics when running in debug mode', async () => {
-      spyGetNetworkState.mockResolvedValueOnce({
-        networkType: 'wifi',
-      });
-      spyGetUniqueId.mockReturnValueOnce('12345');
-      spyGetUserInfo.mockResolvedValueOnce(userInfoResponse);
-      mockedDevEnv.mockReturnValueOnce(false).mockReturnValueOnce(false);
+    it('returns null and sets canTrackEvents false on sendCustomEvent when getNetworkState fails', async () => {
+      getUserInfo.mockResolvedValueOnce(userInfoResponse);
+      spyGetUniqueId.mockReturnValueOnce('device-123');
+      spyGetNetworkState.mockRejectedValueOnce(new Error('network error'));
 
-      const analytics = new Analytics({
-        appVersion: '1.22.0.0',
-        client: 'janis',
-        userEmail: 'janis@janis.im',
-        userId: '12345',
-        language: 'EN-US',
-        connection: 'wifi',
-        deviceId: '12345',
-        userProfile: 'Admin',
-        isDebugMode: true,
-      });
+      const instance = new Analytics({appVersion: '1.0.0'});
+      await instance.setSession();
+      const result = await instance.sendCustomEvent('custom_event', {});
 
-      await analytics.sendScreenTracking('Home', 'Home');
-
-      expect(screenViewEvent).toBeCalled();
+      expect(result).toBeNull();
+      expect(instance.session.canTrackEvents).toBe(false);
     });
 
-    it('return null when not receive required params', async () => {
-      spyGetNetworkState.mockResolvedValueOnce({
-        networkType: 'wifi',
-      });
-      mockedDevEnv.mockReturnValueOnce(true);
-      spyGetUserInfo.mockResolvedValueOnce({});
+    it('returns null and sets canTrackEvents false on sendScreenTracking when getNetworkState fails', async () => {
+      getUserInfo.mockResolvedValueOnce(userInfoResponse);
+      spyGetUniqueId.mockReturnValueOnce('device-123');
+      spyGetNetworkState.mockRejectedValueOnce(new Error('network error'));
 
-      const analytics = new Analytics();
-      const response = await analytics.sendScreenTracking();
+      const instance = new Analytics({appVersion: '1.0.0'});
+      await instance.setSession();
+      const result = await instance.sendScreenTracking('Home', 'HomeClass');
 
-      expect(screenViewEvent).not.toBeCalled();
-      expect(response).toBeNull();
+      expect(result).toBeNull();
+      expect(instance.session.canTrackEvents).toBe(false);
     });
 
-    it('should not send the event in development environments', async () => {
-      mockedDevEnv.mockReturnValueOnce(true);
-      spyGetNetworkState.mockResolvedValueOnce({
-        networkType: 'wifi',
-      });
+    it('restores canTrackEvents to true when getNetworkState recovers', async () => {
+      getUserInfo.mockResolvedValueOnce(userInfoResponse);
+      spyGetUniqueId.mockReturnValueOnce('device-123');
+      spyGetNetworkState
+        .mockRejectedValueOnce(new Error('network error'))
+        .mockResolvedValueOnce({networkType: 'wifi'});
+      mockedDevEnv.mockReturnValueOnce(false);
 
-      const analytics = new Analytics({
-        appVersion: '1.22.0.0',
-        client: 'janis',
-        userEmail: 'janis@janis.im',
-        userId: '12345',
-        language: 'EN-US',
-        connection: 'wifi',
-        deviceId: '12345',
-        userProfile: 'Admin',
-      });
+      const instance = new Analytics({appVersion: '1.0.0'});
+      await instance.setSession();
 
-      await analytics.sendScreenTracking('Home', 'Home');
+      await instance.sendAction('press_button', 'Home');
+      expect(instance.session.canTrackEvents).toBe(false);
 
-      expect(screenViewEvent).not.toBeCalled();
+      await instance.sendAction('press_button', 'Home');
+      expect(instance.session.canTrackEvents).toBe(true);
+    });
+  });
+
+  describe('sendAction', () => {
+    it('returns null when canTrackEvents is false', async () => {
+      const instance = new Analytics({appVersion: '1.0.0'});
+      const result = await instance.sendAction('press_button', 'Home');
+
+      expect(result).toBeNull();
+      expect(actionEvent).not.toHaveBeenCalled();
+    });
+
+    it('returns null in dev environment without debug mode', async () => {
+      getUserInfo.mockResolvedValueOnce(userInfoResponse);
+      spyGetUniqueId.mockReturnValueOnce('device-123');
+      spyGetNetworkState.mockResolvedValueOnce({networkType: 'wifi'});
+
+      const instance = new Analytics({appVersion: '1.0.0'});
+      await instance.setSession();
+      const result = await instance.sendAction('press_button', 'Home');
+
+      expect(result).toBeNull();
+      expect(actionEvent).not.toHaveBeenCalled();
+    });
+
+    it('calls actionEvent in production environment', async () => {
+      getUserInfo.mockResolvedValueOnce(userInfoResponse);
+      spyGetUniqueId.mockReturnValueOnce('device-123');
+      spyGetNetworkState.mockResolvedValueOnce({networkType: 'wifi'});
+      mockedDevEnv.mockReturnValueOnce(false);
+
+      const instance = new Analytics({appVersion: '1.0.0'});
+      await instance.setSession();
+      await instance.sendAction('press_button', 'Home', {rol: 'picker'});
+
+      expect(actionEvent).toHaveBeenCalled();
+    });
+
+    it('calls actionEvent in debug mode regardless of environment', async () => {
+      getUserInfo.mockResolvedValueOnce(userInfoResponse);
+      spyGetUniqueId.mockReturnValueOnce('device-123');
+      spyGetNetworkState.mockResolvedValueOnce({networkType: 'wifi'});
+
+      const instance = new Analytics({appVersion: '1.0.0', isDebugMode: true});
+      await instance.setSession();
+      await instance.sendAction('press_button', 'Home');
+
+      expect(actionEvent).toHaveBeenCalled();
+    });
+
+    it('does not include user identity fields in event params', async () => {
+      getUserInfo.mockResolvedValueOnce(userInfoResponse);
+      spyGetUniqueId.mockReturnValueOnce('device-123');
+      spyGetNetworkState.mockResolvedValueOnce({networkType: 'wifi'});
+      mockedDevEnv.mockReturnValueOnce(false);
+
+      const instance = new Analytics({appVersion: '1.0.0'});
+      await instance.setSession();
+      await instance.sendAction('press_button', 'Home');
+
+      const calledWith = actionEvent.mock.calls[0][0];
+      expect(calledWith).not.toHaveProperty('userEmail');
+      expect(calledWith).not.toHaveProperty('userId');
+      expect(calledWith).not.toHaveProperty('client');
+      expect(calledWith).not.toHaveProperty('language');
+      expect(calledWith).not.toHaveProperty('userProfile');
+    });
+  });
+
+  describe('sendCustomEvent', () => {
+    it('returns null when canTrackEvents is false', async () => {
+      const instance = new Analytics({appVersion: '1.0.0'});
+      const result = await instance.sendCustomEvent('custom_event', {});
+
+      expect(result).toBeNull();
+      expect(customEvent).not.toHaveBeenCalled();
+    });
+
+    it('returns null in dev environment without debug mode', async () => {
+      getUserInfo.mockResolvedValueOnce(userInfoResponse);
+      spyGetUniqueId.mockReturnValueOnce('device-123');
+      spyGetNetworkState.mockResolvedValueOnce({networkType: 'wifi'});
+
+      const instance = new Analytics({appVersion: '1.0.0'});
+      await instance.setSession();
+      const result = await instance.sendCustomEvent('custom_event', {});
+
+      expect(result).toBeNull();
+      expect(customEvent).not.toHaveBeenCalled();
+    });
+
+    it('calls customEvent in production environment', async () => {
+      getUserInfo.mockResolvedValueOnce(userInfoResponse);
+      spyGetUniqueId.mockReturnValueOnce('device-123');
+      spyGetNetworkState.mockResolvedValueOnce({networkType: 'wifi'});
+      mockedDevEnv.mockReturnValueOnce(false);
+
+      const instance = new Analytics({appVersion: '1.0.0'});
+      await instance.setSession();
+      await instance.sendCustomEvent('custom_event', {rol: 'dev'}, ['rol']);
+
+      expect(customEvent).toHaveBeenCalled();
+    });
+
+    it('calls customEvent in debug mode regardless of environment', async () => {
+      getUserInfo.mockResolvedValueOnce(userInfoResponse);
+      spyGetUniqueId.mockReturnValueOnce('device-123');
+      spyGetNetworkState.mockResolvedValueOnce({networkType: 'wifi'});
+
+      const instance = new Analytics({appVersion: '1.0.0', isDebugMode: true});
+      await instance.setSession();
+      await instance.sendCustomEvent('custom_event', {rol: 'dev'});
+
+      expect(customEvent).toHaveBeenCalled();
+    });
+
+    it('does not include user identity fields in event params', async () => {
+      getUserInfo.mockResolvedValueOnce(userInfoResponse);
+      spyGetUniqueId.mockReturnValueOnce('device-123');
+      spyGetNetworkState.mockResolvedValueOnce({networkType: 'wifi'});
+      mockedDevEnv.mockReturnValueOnce(false);
+
+      const instance = new Analytics({appVersion: '1.0.0'});
+      await instance.setSession();
+      await instance.sendCustomEvent('custom_event', {rol: 'dev'});
+
+      const calledWith = customEvent.mock.calls[0][1];
+      expect(calledWith).not.toHaveProperty('userEmail');
+      expect(calledWith).not.toHaveProperty('userId');
+      expect(calledWith).not.toHaveProperty('client');
+      expect(calledWith).not.toHaveProperty('language');
+      expect(calledWith).not.toHaveProperty('userProfile');
+    });
+  });
+
+  describe('sendScreenTracking', () => {
+    it('returns null when canTrackEvents is false', async () => {
+      const instance = new Analytics({appVersion: '1.0.0'});
+      const result = await instance.sendScreenTracking('Home', 'HomeClass');
+
+      expect(result).toBeNull();
+      expect(screenViewEvent).not.toHaveBeenCalled();
+    });
+
+    it('returns null in dev environment without debug mode', async () => {
+      getUserInfo.mockResolvedValueOnce(userInfoResponse);
+      spyGetUniqueId.mockReturnValueOnce('device-123');
+      spyGetNetworkState.mockResolvedValueOnce({networkType: 'wifi'});
+
+      const instance = new Analytics({appVersion: '1.0.0'});
+      await instance.setSession();
+      const result = await instance.sendScreenTracking('Home', 'HomeClass');
+
+      expect(result).toBeNull();
+      expect(screenViewEvent).not.toHaveBeenCalled();
+    });
+
+    it('calls screenViewEvent in production environment', async () => {
+      getUserInfo.mockResolvedValueOnce(userInfoResponse);
+      spyGetUniqueId.mockReturnValueOnce('device-123');
+      spyGetNetworkState.mockResolvedValueOnce({networkType: 'wifi'});
+      mockedDevEnv.mockReturnValueOnce(false);
+
+      const instance = new Analytics({appVersion: '1.0.0'});
+      await instance.setSession();
+      await instance.sendScreenTracking('Home', 'HomeClass');
+
+      expect(screenViewEvent).toHaveBeenCalled();
+    });
+
+    it('calls screenViewEvent in debug mode regardless of environment', async () => {
+      getUserInfo.mockResolvedValueOnce(userInfoResponse);
+      spyGetUniqueId.mockReturnValueOnce('device-123');
+      spyGetNetworkState.mockResolvedValueOnce({networkType: 'wifi'});
+
+      const instance = new Analytics({appVersion: '1.0.0', isDebugMode: true});
+      await instance.setSession();
+      await instance.sendScreenTracking('Home', 'HomeClass');
+
+      expect(screenViewEvent).toHaveBeenCalled();
+    });
+
+    it('does not include user identity fields in event params', async () => {
+      getUserInfo.mockResolvedValueOnce(userInfoResponse);
+      spyGetUniqueId.mockReturnValueOnce('device-123');
+      spyGetNetworkState.mockResolvedValueOnce({networkType: 'wifi'});
+      mockedDevEnv.mockReturnValueOnce(false);
+
+      const instance = new Analytics({appVersion: '1.0.0'});
+      await instance.setSession();
+      await instance.sendScreenTracking('Home', 'HomeClass');
+
+      const calledWith = screenViewEvent.mock.calls[0][2];
+      expect(calledWith).not.toHaveProperty('userEmail');
+      expect(calledWith).not.toHaveProperty('userId');
+      expect(calledWith).not.toHaveProperty('client');
+      expect(calledWith).not.toHaveProperty('language');
+      expect(calledWith).not.toHaveProperty('userProfile');
     });
   });
 });

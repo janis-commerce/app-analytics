@@ -21,13 +21,12 @@ describe('actionEvent method', () => {
       expect(await actionEvent({})).toBe(false);
     });
 
-    it('not pass all required data or this hasnt value', async () => {
+    it('not pass actionName', async () => {
       mockedDevEnv.mockReturnValueOnce(true);
       expect(
         await actionEvent({
-          actionName: 'buttonPress',
           client: 'janis',
-          userEmail: '',
+          appVersion: '1.0.0',
         }),
       ).toBe(false);
     });
