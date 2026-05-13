@@ -42,9 +42,6 @@ buck-out/
 *.keystore
 !debug.keystore
 
-# npm config
-.npmrc
-
 #build
 dist/
 
