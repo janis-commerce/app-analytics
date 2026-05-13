@@ -10,13 +10,17 @@ module.exports = {
     __DEV__: 'readonly',
     fetch: false,
   },
-  parser: 'babel-eslint',
+  parser: '@babel/eslint-parser',
   parserOptions: {
     ecmaFeatures: {
       jsx: true,
     },
-    ecmaVersion: 2018,
+    ecmaVersion: 2020,
     sourceType: 'module',
+    requireConfigFile: false,
+    babelOptions: {
+      presets: ['@babel/preset-env'],
+    },
   },
   plugins: ['react', 'prettier'],
   rules: {
@@ -34,6 +38,8 @@ module.exports = {
     'react/prop-types': 'off',
     'no-param-reassign': 'off',
     'no-console': 'off',
+    'no-restricted-exports': 'off',
+    'default-param-last': 'off',
   },
   overrides: [
     {
@@ -42,6 +48,13 @@ module.exports = {
         'no-underscore-dangle': 'off',
         'func-names': 'off',
         'import/no-extraneous-dependencies': 'off',
+        'import/no-unresolved': 'off',
+      },
+    },
+    {
+      files: ['test/**/*.js'],
+      rules: {
+        'no-promise-executor-return': 'off',
       },
     },
   ],
