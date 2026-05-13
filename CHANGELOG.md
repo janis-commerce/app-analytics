@@ -2,6 +2,24 @@
 
 ## [Unreleased]
 
+## [3.1.0] - 2026-05-13
+
+### Changed
+
+- Migrated development toolchain to Node 22 LTS.
+- Replaced deprecated `babel-eslint` with `@babel/eslint-parser`.
+- Replaced deprecated `metro-react-native-babel-preset` with `@react-native/babel-preset`.
+- Upgraded ESLint 7 to 8, `eslint-config-airbnb` 18 to 19, Prettier 2 to 3.
+- Upgraded Jest 28 and `babel-jest` 26 to 29.
+- Upgraded Husky 4 to 9 and `lint-staged` 10 to 15.
+- Aligned `react` and `react-native` dev dependencies with apps (React 19.1.0, RN 0.80.2).
+- Modernized GitHub Actions workflows to `actions/checkout@v4` and `actions/setup-node@v4`.
+
+### Removed
+
+- Removed unused dev dependencies: `react-test-renderer`, `@testing-library/react-native`, `babel-loader`, `@babel/plugin-proposal-class-properties`, `@babel/plugin-proposal-object-rest-spread`, `@react-native-community/eslint-config`.
+- Removed `.flowconfig` (unused Flow remnant from React Native scaffolding).
+
 ## [3.0.0] - 2026-05-05
 
 ### Breaking Changes
