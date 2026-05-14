@@ -66,3 +66,4 @@ types/
 
 # Bundle artifact
 *.jsbundle
+.bundle/
