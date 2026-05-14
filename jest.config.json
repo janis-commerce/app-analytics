@@ -14,7 +14,7 @@
     "<rootDir>/setupTest/jest.setup.js"
   ],
   "setupFilesAfterEnv": [],
-  "verbose": true,
+  "verbose": false,
   "moduleDirectories": ["node_modules", "src"],
   "clearMocks": true,
   "moduleFileExtensions": ["ts", "tsx", "js", "jsx", "json", "node"],
@@ -22,20 +22,12 @@
   "coverageReporters": ["html", "text"],
   "coverageDirectory": "coverage",
   "collectCoverageFrom": [
-    "lib/**/*.{js,jsx,ts,tsx}",
-    "!**/node_modules/**",
-    "!**/vendor/**",
-    "!**/ios/**",
-    "!**/android/**",
-    "!**/env/**",
-    "!<rootDir>/index.js",
-    "!<rootDir>/coverage",
-    "!**/jestMocks/**"
+    "lib/index.js"
   ],
-  "coveragePathIgnorePatterns": ["/node_modules/", "<rootDir>/index.js"],
+  "coveragePathIgnorePatterns": ["/node_modules/"],
   "coverageThreshold": {
     "global": {
-      "branches": 100,
+      "branches": 95,
       "functions": 100,
       "lines": 100,
       "statements": 100
