@@ -18,7 +18,6 @@ describe('Analytics class', () => {
   const mockedDevEnv = jest.spyOn(utils, 'isDevEnv');
   const spyGetNetworkState = jest.spyOn(deviceInfo, 'getNetworkState');
   const spyGetUniqueId = jest.spyOn(deviceInfo, 'getUniqueId');
-  const spyGetApplicationName = jest.spyOn(deviceInfo, 'getApplicationName');
   const spyGetDeviceModel = jest.spyOn(deviceInfo, 'getDeviceModel');
   const spyGetOSVersion = jest.spyOn(deviceInfo, 'getOSVersion');
 
@@ -84,7 +83,6 @@ describe('Analytics class', () => {
       it('sets canTrackEvents to true on success', async () => {
         getUserInfo.mockResolvedValueOnce(userInfoResponse);
         spyGetUniqueId.mockReturnValueOnce('device-123');
-        spyGetApplicationName.mockReturnValueOnce('MyApp');
         spyGetDeviceModel.mockReturnValueOnce('Pixel 6');
         spyGetOSVersion.mockReturnValueOnce('13');
 
@@ -97,7 +95,6 @@ describe('Analytics class', () => {
       it('stores device data and appVersion in session', async () => {
         getUserInfo.mockResolvedValueOnce(userInfoResponse);
         spyGetUniqueId.mockReturnValueOnce('device-123');
-        spyGetApplicationName.mockReturnValueOnce('MyApp');
         spyGetDeviceModel.mockReturnValueOnce('Pixel 6');
         spyGetOSVersion.mockReturnValueOnce('13');
 
@@ -108,7 +105,6 @@ describe('Analytics class', () => {
           canTrackEvents: true,
           appVersion: '1.0.0',
           deviceId: 'device-123',
-          appName: 'MyApp',
           device: 'Pixel 6',
           osVersion: '13',
         });
@@ -165,7 +161,6 @@ describe('Analytics class', () => {
       it('resets session to canTrackEvents false', async () => {
         getUserInfo.mockResolvedValueOnce(userInfoResponse);
         spyGetUniqueId.mockReturnValueOnce('device-123');
-        spyGetApplicationName.mockReturnValueOnce('MyApp');
         spyGetDeviceModel.mockReturnValueOnce('Pixel 6');
         spyGetOSVersion.mockReturnValueOnce('13');
 

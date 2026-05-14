@@ -2,6 +2,16 @@
 
 ## [Unreleased]
 
+## [4.0.0-beta.2] - 2026-05-14
+
+### Changed
+
+- Error logs emitted by the package are now prefixed with `[GA4]` to distinguish them from consumer app logs.
+
+### Removed
+
+- `appName` is no longer included as an event param in `sendAction`, `sendCustomEvent` or `sendScreenTracking`. Firebase Analytics already exposes app identity natively (`app_info.id` and `app_info.firebase_app_id` in BigQuery export, "App name" dimension in GA4). Consumers that filter by `event_params.appName` in GA4 or BigQuery must switch to `app_info.id` or the GA4 "App name" dimension instead.
+
 ## [4.0.0-beta.1] - 2026-05-14
 
 ### Breaking Changes

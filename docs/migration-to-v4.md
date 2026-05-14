@@ -6,6 +6,14 @@ This requires a few changes in how you integrate the package.
 
 ---
 
+## Why
+
+GA4 with event-scoped dimensions does not consolidate users. When `userId` and other identity fields travel as event params, each event can be counted as a distinct user — inflating `totalUsers` and making audience reports unreliable.
+
+The fix is to use Firebase's session APIs: `analytics().setUserId()` and `analytics().setUserProperties()`. These associate identity with the device/session and are automatically applied to all subsequent events, so they only need to be called once at login.
+
+---
+
 ## Breaking changes
 
 ### 1. Replace `sendUserInfo()` with `setSession()`
@@ -69,8 +77,17 @@ If you have dashboards, BigQuery exports or GA4 audiences that read these fields
 
 ---
 
+### 5. `appName` no longer travels in events
+
+`appName` is no longer included as a param in `sendAction`, `sendCustomEvent` or `sendScreenTracking`. Firebase Analytics already knows the app identity natively, so this param was redundant.
+
+If you have dashboards, BigQuery queries or GA4 audiences that filter by `event_params.appName`, update them to use `app_info.id` (BigQuery) or the GA4 "App name" dimension instead.
+
+---
+
 ## Migration checklist
 
 - [ ] Replace `analytics.sendUserInfo()` with `await analytics.setSession()` in the login flow
 - [ ] Add `await analytics.clearSession()` in the logout flow
 - [ ] Update `sendCustomEvent` calls to use the new object signature `{ eventName, params, extraParams }`
+- [ ] Update GA4/BigQuery dashboards that filter by `event_params.appName` to use `app_info.id` or the GA4 "App name" dimension instead

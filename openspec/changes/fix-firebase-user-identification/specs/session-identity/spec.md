@@ -1,10 +1,10 @@
 ## ADDED Requirements
 
 ### Requirement: appVersion es requerido en el constructor
-El constructor SHALL lanzar un error si `appVersion` no es provisto.
+El constructor SHALL lanzar un error si `appVersion` no es provisto o no es un string.
 
-#### Scenario: constructor sin appVersion
-- **WHEN** el consumidor instancia `new Analytics({})` sin pasar `appVersion`
+#### Scenario: constructor sin appVersion o con tipo inválido
+- **WHEN** el consumidor instancia `new Analytics()`, `new Analytics({})`, o pasa un valor que no sea string (`null`, `undefined`, `''`, `123`, `{}`)
 - **THEN** el constructor lanza `Error('appVersion is required')`
 
 #### Scenario: constructor con appVersion válido
@@ -12,14 +12,14 @@ El constructor SHALL lanzar un error si `appVersion` no es provisto.
 - **THEN** `this.session.appVersion` es `'1.0.0'`
 
 ### Requirement: setSession registra la identidad del usuario en Firebase
-Cuando el consumidor llama `setSession()`, el sistema SHALL obtener los datos del usuario desde el token OAuth via `getUserInfo()`, validar que los campos requeridos del token estén presentes via `validateData`, llamar `analytics().setUserId(sub)` con el campo `sub` del token, y llamar `analytics().setUserProperties({ userEmail, client, language, profile })` con los campos correspondientes del token. El sistema SHALL guardar `{ appVersion, deviceId, appName, device, osVersion, isReady: true, canTrackEvents: true }` en `this.session`. Si `getUserInfo()` falla o la validación del token falla, `isReady` y `canTrackEvents` permanecen `false` y los eventos posteriores no se enviarán.
+Cuando el consumidor llama `setSession()`, el sistema SHALL obtener los datos del usuario desde el token OAuth via `getUserInfo()`, validar que los campos requeridos del token estén presentes via `validateData`, llamar `analytics().setUserId(sub)` con el campo `sub` del token, y llamar `analytics().setUserProperties({ userEmail, client, language, profile })` con los campos correspondientes del token. El sistema SHALL guardar `{ appVersion, deviceId, device, osVersion, isReady: true, canTrackEvents: true }` en `this.session`. Si `getUserInfo()` falla o la validación del token falla, `isReady` y `canTrackEvents` permanecen `false` y los eventos posteriores no se enviarán.
 
 #### Scenario: setSession con token válido
 - **WHEN** el consumidor llama `setSession()` en una instancia creada con `new Analytics({ appVersion })`
 - **THEN** el sistema valida los campos del token con `validateData(userInfo, ['sub', 'email', 'tcode', 'locale', 'profileName'])`
 - **THEN** el sistema llama `analytics().setUserId(sub)` con el `sub` del token
 - **THEN** el sistema llama `analytics().setUserProperties({ userEmail, client, language, profile })` con los valores del token
-- **THEN** el sistema guarda `{ isReady: true, canTrackEvents: true, appVersion, deviceId, appName, device, osVersion }` en `this.session`
+- **THEN** el sistema guarda `{ isReady: true, canTrackEvents: true, appVersion, deviceId, device, osVersion }` en `this.session`
 
 #### Scenario: setSession cuando getUserInfo falla
 - **WHEN** el consumidor llama `setSession()` y `getUserInfo()` lanza un error
@@ -73,6 +73,8 @@ El sistema SHALL mapear los campos del token OAuth a Firebase de la siguiente fo
 - **THEN** `setUserId` recibe el valor de `sub`
 - **THEN** `setUserProperties` recibe `{ userEmail: email, client: tcode, language: locale, profile: profileName }`
 
-#### Scenario: Campo opcional ausente en el token
-- **WHEN** `getUserInfo()` retorna un token sin alguno de los campos opcionales (ej. `profileName` es null)
-- **THEN** el sistema omite ese campo en `setUserProperties` en lugar de enviar null
+#### Scenario: Token con campos requeridos faltantes
+- **WHEN** `getUserInfo()` retorna un token sin alguno de los campos requeridos (`sub`, `email`, `tcode`, `locale`, `profileName`)
+- **THEN** `validateData` lanza un error
+- **THEN** el sistema NO llama `setUserId` ni `setUserProperties`
+- **THEN** `this.session.isReady` permanece `false`

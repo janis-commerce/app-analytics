@@ -35,7 +35,7 @@
 - [x] 7.1 Crear método `setSession()` que llame `getUserInfo()`
 - [x] 7.2 Llamar `analytics().setUserId(sub)` con el campo `sub` del token
 - [x] 7.3 Llamar `analytics().setUserProperties({ userEmail, client, language, profile: profileName })`
-- [x] 7.4 Guardar `{ appVersion, deviceId, appName, device, osVersion }` en `this.session`
+- [x] 7.4 Guardar `{ appVersion, deviceId, device, osVersion }` en `this.session`
 - [x] 7.5 Setear `this.session.canTrackEvents = true` al completar exitosamente
 - [x] 7.6 Manejar error: si `getUserInfo()` falla, `canTrackEvents` permanece `false` y se llama `showErrorInDebug`
 
