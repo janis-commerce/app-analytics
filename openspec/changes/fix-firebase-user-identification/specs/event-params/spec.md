@@ -1,11 +1,11 @@
 ## MODIFIED Requirements
 
 ### Requirement: Datos base que viajan en cada evento
-Los eventos de Firebase SHALL incluir únicamente `appVersion`, `deviceId` y `connection` como datos base. Los campos de identidad de usuario (`userEmail`, `userId`, `client`, `language`, `userProfile`) NO deben incluirse como parámetros de evento — son registrados una sola vez por sesión vía `setUser()`.
+Los eventos de Firebase SHALL incluir `appVersion`, `deviceId`, `connection`, `appName`, `device` y `osVersion` como datos base. Los campos de identidad de usuario (`userEmail`, `userId`, `client`, `language`, `userProfile`) NO deben incluirse como parámetros de evento — son registrados una sola vez por sesión vía `setSession()`.
 
 #### Scenario: Evento enviado con datos base correctos
 - **WHEN** el consumidor llama cualquier método de envío (`sendAction`, `sendCustomEvent`, `sendScreenTracking`)
-- **THEN** el evento incluye `appVersion`, `deviceId` y `connection`
+- **THEN** el evento incluye `appVersion`, `deviceId`, `connection`, `appName`, `device`, `osVersion`
 - **THEN** el evento NO incluye `userEmail`, `userId`, `client`, `language` ni `userProfile`
 
 #### Scenario: connection se obtiene fresco en cada evento

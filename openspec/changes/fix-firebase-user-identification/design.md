@@ -51,9 +51,21 @@ Con `this.session.isReady` y `this.session.canTrackEvents` como fuente de verdad
 
 ### 5. `clearSession()` limpia estado en Firebase y en la instancia
 
-Llama `analytics().setUserId(null)` y `analytics().setUserProperties({ userEmail: null, client: null, language: null, profile: null })`. Además resetea `this.session` a `{ canTrackEvents: false }` para que un eventual `setSession()` posterior funcione correctamente.
+Llama `analytics().setUserId(null)` y `analytics().setUserProperties({ userEmail: null, client: null, language: null, profile: null })`. Además resetea `this.session` a `{ isReady: false, canTrackEvents: false }` para que un eventual `setSession()` posterior funcione correctamente.
 
-### 6. Mapeo de campos OAuth → Firebase
+### 6. Try/catch en `sendX`, no en los eventos internos
+
+`actionEvent`, `customEvent` y `screenViewEvent` son funciones internas que lanzan si algo falla. El manejo de error (try/catch + `showErrorInDebug`) vive en `sendAction`, `sendCustomEvent` y `sendScreenTracking`. Esto simplifica las funciones internas y centraliza la política de error en la clase.
+
+### 7. Firma de `sendCustomEvent` como objeto
+
+`sendCustomEvent` recibe `{eventName, params, extraParams}` en lugar de tres argumentos posicionales. Con múltiples argumentos opcionales, el objeto es más legible y menos propenso a errores de orden.
+
+### 8. `extraParams` en `customEvent` → `dataEvent`
+
+El tercer argumento de `customEvent` pasó de ser un array de keys requeridas a un objeto `extraParams`. Los campos en `extraParams` se serializan bajo la key `dataEvent` como JSON string, para no superar el límite de 25 params por evento de Firebase. Los campos en `params` van directo al evento como params individuales.
+
+### 10. Mapeo de campos OAuth → Firebase
 
 | Campo token OAuth | User property en Firebase |
 |---|---|
@@ -62,8 +74,6 @@ Llama `analytics().setUserId(null)` y `analytics().setUserProperties({ userEmail
 | `tcode` | `client` |
 | `locale` | `language` |
 | `profileName` | `profile` |
-
-El campo interno sigue siendo `userProfile` en el código; solo el nombre en Firebase cambia a `profile`.
 
 ## Risks / Trade-offs
 

@@ -318,3 +318,11 @@ import {userInfoEvent} from '@janiscommerce/app-analytics
 
 userInfoEvent({appName:'app_name',appVersion:'1.0.0',device:'samsung a10',os:'android',osVersion:'10',userEmail:'user_name@janis.im',userId:'012345678910', client: 'janis'})
 ```
+
+---
+
+## Documentation
+
+- [Migration to v4](docs/migration-to-v4.md) — breaking changes and migration guide from v3 to v4
+- [Enable Firebase DebugView](docs/enableDebugView.md) — how to enable real-time event debugging in Firebase console
+- [Recommended Events](docs/recommendedEvents.md) — Google Analytics recommended events reference

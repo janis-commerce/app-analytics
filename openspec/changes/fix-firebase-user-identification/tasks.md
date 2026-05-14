@@ -52,7 +52,20 @@
 - [x] 9.3 Eliminar `formatBasicData()` — los datos base se arman inline en `#getBaseEventParams()`
 - [x] 9.4 Renombrar `validObjectWithValues` → `normalizeParams` en `lib/utils/index.js`
 - [x] 9.5 Renombrar `validateRequiredStringParams` → `validateData` y sus argumentos `params`/`extraRequiredParams` → `data`/`requiredKeys`
-- [x] 9.6 Actualizar todas las referencias en el codebase
+- [x] 9.6 Eliminar `splitRequiredAndRemainingParams` — ya no se usa en ningún archivo
+- [x] 9.7 Eliminar `formatValue` — reemplazada por `formatActionName` inline en `actionEvent.js`
+- [x] 9.8 Eliminar `lib/utils/decorationText.js` — código muerto
+- [x] 9.9 Mover `promiseWrapper` a `@janiscommerce/apps-helpers` — agregar como peerDependency y devDependency
+- [x] 9.10 Actualizar todas las referencias en el codebase
+
+## 11. Refactorizar eventos
+
+- [x] 11.1 Mover try/catch de `actionEvent` a `sendAction` — `actionEvent` lanza, `sendAction` maneja el error
+- [x] 11.2 Mover try/catch de `customEvent` a `sendCustomEvent` — `customEvent` lanza, `sendCustomEvent` maneja el error
+- [x] 11.3 Mover try/catch de `screenViewEvent` a `sendScreenTracking` — `screenViewEvent` lanza, `sendScreenTracking` maneja el error
+- [x] 11.4 Cambiar firma de `sendCustomEvent` a objeto `{eventName, params, extraParams}` — más legible con múltiples argumentos opcionales
+- [x] 11.5 Cambiar firma de `customEvent` — tercer argumento pasa a ser `extraParams` (objeto) en vez de array de requeridos; se serializa bajo `dataEvent`
+- [x] 11.6 Todos los `sendX` retornan `true` en éxito y `false` en error
 
 ## 10. Tests
 
