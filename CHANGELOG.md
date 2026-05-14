@@ -2,6 +2,28 @@
 
 ## [Unreleased]
 
+## [4.0.0-beta.1] - 2026-05-14
+
+### Breaking Changes
+
+- User identity fields (`userEmail`, `userId`, `client`, `language`, `userProfile`) no longer travel as params in Firebase events. They are now registered once per session via Firebase session APIs (`setUserId`, `setUserProperties`).
+- `initialize()` removed. Replace with `setSession()` at login.
+- `sendUserInfo()` removed. Replace with `setSession()` at login.
+- `sendCustomEvent()` signature changed from positional arguments to a single object `{ eventName, params, extraParams }`.
+- `Analytics` class now exported directly from `lib/index.js` (previously re-exported from `lib/analytics.js`).
+
+### Added
+
+- `setSession()` — fetches user info from OAuth token and registers identity in Firebase via `setUserId` and `setUserProperties`. Must be called once at login.
+- `clearSession()` — clears user identity from Firebase and resets session state. Must be called at logout.
+
+### Removed
+
+- `sendUserInfo()` method and `lib/userInfoEvent.js`.
+- User identity fields from all event params (`userEmail`, `userId`, `client`, `language`, `userProfile`).
+- `formatBasicData()` / `getEventBaseData()` utils.
+- `requiredInitialData` and `includesAllProperties` helpers.
+
 ## [3.1.0] - 2026-05-13
 
 ### Changed
