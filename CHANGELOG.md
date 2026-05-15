@@ -2,6 +2,20 @@
 
 ## [Unreleased]
 
+## [4.0.0-beta.3]
+
+### Added
+
+- `setUserProperties(properties)` — updates one or more Firebase user properties after login. Use it for dynamic user attributes that change during the session (e.g. `warehouseId`, `language`).
+- Internal package errors are now reported to Crashlytics via `@janiscommerce/app-crashlytics`. Previously these errors were only logged to the console in dev and silently swallowed in production. They now surface in the Firebase Crashlytics console under non-fatal errors prefixed with `[GA4]`.
+- `@janiscommerce/app-crashlytics` is now a required peer dependency (`>=2.3.0-beta.0`).
+
+### Changed
+
+- `locale` and `profileName` are no longer required fields in `setSession()`. Only `sub`, `email` and `tcode` are required. If `locale` or `profileName` are absent from the OAuth token, `setSession()` still succeeds and the corresponding user properties are simply not registered in Firebase.
+- `clearSession()` now nullifies all user properties registered during the session (both the ones set by `setSession()` and any extra ones set via `setUserProperties()`), instead of only the four hardcoded keys. This prevents dynamic properties (e.g. `warehouseId`) from leaking to the next user on the same device.
+- `clearSession()` now preserves `appVersion` and `isDebugMode` in the session state, so the same `Analytics` instance can be reused after logout/login without losing constructor-set data.
+
 ## [4.0.0-beta.2] - 2026-05-14
 
 ### Changed

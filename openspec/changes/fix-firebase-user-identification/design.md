@@ -33,7 +33,7 @@ La solución es usar las APIs de sesión de Firebase: `analytics().setUserId()` 
 
 - **`setSession()`** (público): llama `getUserInfo()`, luego `analytics().setUserId(sub)` y `analytics().setUserProperties({ userEmail, client, language, profile: profileName })`. Guarda `{ appVersion, deviceId, device, osVersion }` en `this.session` — `appVersion` del constructor, el resto de `@janiscommerce/app-device-info` — y setea `this.session.canTrackEvents = true`. Si falla, `canTrackEvents` permanece `false`.
 - **`#getBaseEventParams()`** (privado): llama `getNetworkState()` y retorna `{ connection, appVersion, deviceId }` combinando la red actual con `this.session`. Se ejecuta antes de cada evento.
-- **`this.session`**: objeto de instancia con `{ appVersion, deviceId, device, osVersion, isReady, canTrackEvents, isDebugMode }`. `isReady` empieza en `false` y solo pasa a `true` cuando `setSession()` completa exitosamente — es la guarda de autenticación. `canTrackEvents` refleja el estado de red y puede oscilar entre eventos — si `getNetworkState()` falla se pone en `false`, si tiene éxito vuelve a `true`. El getter privado `#canSendEvent` combina ambas flags: `isReady && canTrackEvents`. Todos los métodos de envío verifican `#canSendEvent` antes de proceder — si retorna `false` retornan `null` sin enviar nada.
+- **`this.session`**: objeto de instancia con `{ appVersion, deviceId, device, osVersion, isReady, canTrackEvents, isDebugMode, userProperties }`. `isReady` empieza en `false` y solo pasa a `true` cuando `setSession()` completa exitosamente — es la guarda de autenticación. `canTrackEvents` refleja el estado de red y puede oscilar entre eventos — si `getNetworkState()` falla se pone en `false`, si tiene éxito vuelve a `true`. El getter privado `#canSendEvent` combina ambas flags: `isReady && canTrackEvents`. Todos los métodos de envío verifican `#canSendEvent` antes de proceder — si retorna `false` retornan `null` sin enviar nada. `userProperties` acumula las claves registradas vía `setSession()` y `setUserProperties()` para que `clearSession()` pueda nullificarlas dinámicamente.
 
 **Alternativa descartada:** mantener `initialize()` lazy (como hoy, con el check `includesAllProperties`). Se descarta porque oculta el momento real del seteo y hace que Firebase reciba el `setUserId` en el primer evento en lugar de al login.
 
@@ -51,7 +51,9 @@ Con `this.session.isReady` y `this.session.canTrackEvents` como fuente de verdad
 
 ### 5. `clearSession()` limpia estado en Firebase y en la instancia
 
-Llama `analytics().setUserId(null)` y `analytics().setUserProperties({ userEmail: null, client: null, language: null, profile: null })`. Además resetea `this.session` a `{ isReady: false, canTrackEvents: false }` para que un eventual `setSession()` posterior funcione correctamente.
+Llama `analytics().setUserId(null)` y nullifica dinámicamente todas las user properties registradas durante la sesión — tanto las de `setSession()` como las extras de `setUserProperties()` (ej. `warehouseId`). Para lograrlo, `this.session.userProperties` acumula las claves registradas; `clearSession()` las recorre y construye el objeto de nullificación en tiempo de ejecución. Si no había keys registradas, no llama `setUserProperties`.
+
+Resetea `this.session` al shape del constructor preservando `appVersion` e `isDebugMode`, de forma que la misma instancia pueda reutilizarse en un ciclo logout/login sin perder la configuración de la instancia.
 
 ### 6. Try/catch en `sendX`, no en los eventos internos
 

@@ -48,6 +48,15 @@ jest.mock('@janiscommerce/oauth-native', () => ({
   }),
 }));
 
+jest.mock('@janiscommerce/app-crashlytics', () => {
+  const mockInstance = {
+    recordError: jest.fn(),
+    log: jest.fn(),
+    initialize: jest.fn(),
+  };
+  return jest.fn().mockImplementation(() => mockInstance);
+});
+
 jest.mock('@janiscommerce/app-device-info', () => ({
   __esModule: true,
   getDeviceModel: jest.fn(),

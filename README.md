@@ -2,321 +2,198 @@
 
 ![janis-logo](brand-logo.png)
 
-Library of methods to send information to firebase.
+Firebase Analytics tracking for Janis React Native apps.
 
+## Requirements
 
+- `@react-native-firebase/app` and `@react-native-firebase/analytics` installed and configured
+- `@janiscommerce/app-crashlytics` installed (used for internal error reporting in production)
 
-## Firebase setting
-
-Before getting started, you should have set up a [new firebase project](https://console.firebase.google.com/).
-
-If you already have it set up, the next step to do would be to add the google-services.json file to the root directory of your module (/android/app).
-
-### Add the firebase sdk
-
-For the Firebase SDKs to be able to access the google-services.json configuration values, you need the Google Services Gradle plugin.
-
-Add the plugin as a dependency to your project-level build.gradle file: (android/build.gradle)
-
-```javascript
-dependencies {
-        // ...
-        classpath 'com.google.gms:google-services:4.3.15'
-    } 
-```
-
-Additionally, should add google services plugins in **android/app/build.gradle** and any Firebase SDKs you want to use in your app:
-
-```javascript
-plugins {
-  // ...
-
-  // Add the Google services Gradle plugin
-  id("com.google.gms.google-services")
-}
-
-dependencies {
-  // Import the Firebase BoM
-  implementation platform('com.google.firebase:firebase-bom:32.2.2')
-
-
-  // TODO: Add the dependencies for Firebase products you want to use
-  // When using the BoM, don't specify versions in Firebase dependencies
-  implementation 'com.google.firebase:firebase-analytics'
-
-
-  // Add the dependencies for any other desired Firebase products
-  // https://firebase.google.com/docs/android/setup#available-libraries
-}
-
-```
-
-### Clean the project
-
-```sh
-cd android && ./gradlew clean && cd ..
-```
-
-
-## PeerDependencies Installation
-
-For the methods of this library to work, the following dependencies must be installed:
-
-```sh
-npm install @react-native-firebase/app
-```
-The @react-native-firebase/app module must be installed before using any other Firebase service.
-
-Additionally, you need to install the dependency of the firebase service you want to use. 
-For example this:
-
-```sh
-npm install @react-native-firebase/analytics
-```
-This dependency will allow that, when executing the methods of the package, these can be registered as events in firebase
+See [Firebase setup](#firebase-setup) for Android/iOS configuration.
 
 ## Installation
 
 ```sh
 npm install @janiscommerce/app-analytics
 ```
+
 ## Usage
 
-## Modules
+### 1. Create an instance
 
-<dl>
-<dt><a href="#module_initialize">initialize</a></dt>
-<dd><p>This method is responsible for initializing the analytics class and obtaining the user information to build the instance;</p>
-</dd>
-<dt><a href="#module_sendUserInfo">sendUserInfo</a></dt>
-<dd><p>send userInfo Event to analytics console with user, app and device data.</p>
-</dd>
-<dt><a href="#module_sendAction">sendAction</a></dt>
-<dd><p>send an action log to analytics console</p>
-</dd>
-<dt><a href="#module_sendCustomEvent">sendCustomEvent</a></dt>
-<dd><p>send a new customEvent to analytics console</p>
-</dd>
-<dt><a href="#module_sendScreenTracking">sendScreenTracking</a></dt>
-<dd><p>send a screenViewEvent to analytics console to record the screens the user visits</p>
-</dd>
-</dl>
-
-## Classes
-
-<dl>
-<dt><a href="#Analytics">Analytics</a></dt>
-<dd></dd>
-</dl>
-
-## Functions
-
-<dl>
-<dt><a href="#actionEvent">actionEvent(params)</a> ⇒ <code>boolean</code></dt>
-<dd><p>is responsible for registering an event that reports the execution of an action by the user. Not use the camelCase format, since the function transforms the strings to lowercase. Instead write with spaces, as they will later be replaced by underscores</p>
-</dd>
-<dt><a href="#customEvent">customEvent(eventName, params, customRequiredParams)</a> ⇒ <code>boolean</code></dt>
-<dd><p>allows to register a custom event, receives the name of the event to be registered and the associated data</p>
-</dd>
-<dt><a href="#screenViewEvent">screenViewEvent(screenName, screenClass)</a> ⇒ <code>boolean</code></dt>
-<dd><p>logs an event with information from the screen the user is viewing</p>
-</dd>
-<dt><a href="#userInfoEvent">userInfoEvent(params)</a> ⇒ <code>boolean</code></dt>
-<dd><p>is responsible for registering an event that reports all data of user, device and app</p>
-</dd>
-</dl>
-
-<a name="module_initialize"></a>
-
-## initialize
-This method is responsible for initializing the analytics class and obtaining the user information to build the instance;
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| appVersion | <code>string</code> | a string that represents the version number of the app |
-
-**Example**  
-```js
-const analyticsInstance = await Analytics.initialize('1.22.0.0')
-```
-<a name="module_sendUserInfo"></a>
-
-## sendUserInfo
-send userInfo Event to analytics console with user, app and device data.
-
-<a name="module_sendAction"></a>
-
-## sendAction
-send an action log to analytics console
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| actionName | <code>string</code> | is the name of the action the user completed |
-| screenName | <code>string</code> | is the name of the screen where the action was called |
-| params | <code>object</code> | An object with any additional information you would like to register for the event |
-
-<a name="module_sendCustomEvent"></a>
-
-## sendCustomEvent
-send a new customEvent to analytics console
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| eventName | <code>string</code> | is the name that will be received the event logged |
-| params | <code>object</code> | An object with any additional information you would like to register for the event |
-| requiredParams | <code>array</code> | array of extra strings required for a custom event |
-
-<a name="module_sendScreenTracking"></a>
-
-## sendScreenTracking
-send a screenViewEvent to analytics console to record the screens the user visits
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| screenName | <code>string</code> | Screen name the user is currently viewing. |
-| screenClass | <code>string</code> | Current class associated with the view the user is currently viewing. |
-
-<a name="Analytics"></a>
-
-## Analytics
-**Kind**: global class  
-<a name="new_Analytics_new"></a>
-
-### new Analytics(params)
-This class is responsible for handling events to record user information, actions and custom events
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| params | <code>object</code> | an object that contains all the information regarding the user that you want to add as initial information. This will then be used based on the need of each event. |
-| params.appVersion | <code>string</code> | a string that represents the version number of the app |
-
-**Example**  
 ```js
 import Analytics from '@janiscommerce/app-analytics'
 
-const analytics = new Analytics({appVersion:'1.22.0'})
+const analytics = new Analytics({ appVersion: '1.0.0' })
 ```
-<a name="actionEvent"></a>
 
-## actionEvent(params) ⇒ <code>boolean</code>
-is responsible for registering an event that reports the execution of an action by the user. Not use the camelCase format, since the function transforms the strings to lowercase. Instead write with spaces, as they will later be replaced by underscores
+| Param | Type | Required | Description |
+| --- | --- | --- | --- |
+| `appVersion` | `string` | Yes | App version string |
+| `isDebugMode` | `boolean` | No | When `true`, events are sent even in dev environment |
 
-**Kind**: global function  
-**Throws**:
+### 2. Register user identity at login
 
-- an error when not pass valid params or any of the required parameters are missing
+Call `setSession()` once after the user logs in. It fetches the user from the OAuth token and registers identity in Firebase via `setUserId` and `setUserProperties`.
 
-
-| Param | Type | Description |
-| --- | --- | --- |
-| params | <code>object</code> | data set to send |
-| params.actionName | <code>string</code> | name of the action that will be registered |
-| params.client | <code>string</code> | janis operating client |
-| params.userEmail | <code>string</code> | janis registered user email |
-| params.userId | <code>string</code> | registered user id |
-| params.language | <code>string</code> | language used in the application |
-| params.appVersion | <code>string</code> | app version in use |
-| params.screenName | <code>string</code> | screen where the action was called |
-| params.anotherKey... | <code>string</code> | any extra data that you want to be sent will be cataloged as dataEvent |
-
-**Example**  
 ```js
-import {actionEvent} from '@janiscommerce/app-analytics'
-
-actionEvent({actionName:'button press',client: 'client',userEmail: 'janis@janis.im',userId:'123456',appVersion:'1.20.0'})
+await analytics.setSession()
 ```
-<a name="customEvent"></a>
 
-## customEvent(eventName, params, customRequiredParams) ⇒ <code>boolean</code>
-allows to register a custom event, receives the name of the event to be registered and the associated data
+### 3. Send events
 
-**Kind**: global function  
-**Throws**:
-
-- an error when some required params is not passed
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| eventName | <code>string</code> | name of the event that we are going to register |
-| params | <code>object</code> | event parameters, information that we are going to send |
-| params.client | <code>string</code> | janis operating client |
-| params.userEmail | <code>string</code> | janis registered user email |
-| params.userId | <code>string</code> | registered user id |
-| params.appVersion | <code>string</code> | app version in use |
-| params.language | <code>string</code> | user app language |
-| params.anotherKey... | <code>string</code> | any extra data that you want to be sent will be cataloged as dataEvent |
-| customRequiredParams | <code>Array.&lt;string&gt;</code> | any extra parameters that may be required for any custom event |
-
-**Example**  
 ```js
-import {customEvent} from '@janiscommerce/app-analytics'
+// Log an action
+await analytics.sendAction('button_press', 'Home')
+await analytics.sendAction('button_press', 'Home', { itemId: '123' })
 
-customEvent('event_init',{date:"2011-10-05T14:48:00.000Z"})
+// Log a custom event
+await analytics.sendCustomEvent({
+  eventName: 'order_created',
+  params: { orderId: '123' },
+  extraParams: { note: 'fragile' }, // serialized as dataEvent JSON string
+})
+
+// Log a screen view
+await analytics.sendScreenTracking('Home', 'HomeScreen')
 ```
-<a name="screenViewEvent"></a>
 
-## screenViewEvent(screenName, screenClass) ⇒ <code>boolean</code>
-logs an event with information from the screen the user is viewing
+### 4. Update user properties after login
 
-**Kind**: global function  
-**Throws**:
+Use `setUserProperties` to register or update dynamic user attributes after login (e.g. when a warehouse operator selects a depot).
 
-- an error when some required params is not passed
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| screenName | <code>string</code> | Screen name the user is currently viewing. |
-| screenClass | <code>string</code> | Current class associated with the view the user is currently viewing. |
-| params.client | <code>string</code> | janis operating client |
-| params.userEmail | <code>string</code> | janis registered user email |
-| params.userId | <code>string</code> | registered user id |
-| params.language | <code>string</code> | language used in the application |
-| params.appVersion | <code>string</code> | app version in use |
-
-**Example**  
 ```js
-import {screenViewEvent} from '@janiscommerce/app-analytics'
-
-screenViewEvent('home','class_home')
+await analytics.setUserProperties({ warehouseId: 'WH-001' })
+await analytics.setUserProperties({ language: 'es-AR' })
 ```
-<a name="userInfoEvent"></a>
 
-## userInfoEvent(params) ⇒ <code>boolean</code>
-is responsible for registering an event that reports all data of user, device and app
+### 5. Clear user identity at logout
 
-**Kind**: global function  
-**Throws**:
+Call `clearSession()` when the user logs out. It clears user identity from Firebase and nullifies all registered user properties, including any extras set via `setUserProperties`.
 
-- an error when not pass valid params
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| params | <code>object</code> | data set to send |
-| params.appName | <code>string</code> | name of the app in use |
-| params.appVersion | <code>string</code> | app version in use |
-| params.device | <code>string</code> | device model |
-| params.osVersion | <code>string</code> | version of the model |
-| params.userEmail | <code>string</code> | janis registered user email |
-| params.userId | <code>string</code> | registered user id |
-| params.client | <code>string</code> | janis operating client |
-| params.language | <code>string</code> | language used in the application |
-| params.screenSize | <code>string</code> | screen size to user'device |
-| params.screenSize.screenHeight | <code>string</code> | user device screen height |
-| params.screenSize.screenWidth | <code>string</code> | user device screen width |
-
-**Example**  
 ```js
-import {userInfoEvent} from '@janiscommerce/app-analytics
+await analytics.clearSession()
+```
 
-userInfoEvent({appName:'app_name',appVersion:'1.0.0',device:'samsung a10',os:'android',osVersion:'10',userEmail:'user_name@janis.im',userId:'012345678910', client: 'janis'})
+---
+
+## API
+
+### `new Analytics({ appVersion, isDebugMode })`
+
+Creates a new Analytics instance. Throws if `appVersion` is not provided or is not a string.
+
+### `setSession()`
+
+Fetches user info from the OAuth token and registers identity in Firebase:
+- Calls `analytics().setUserId(sub)` with the token's `sub` field
+- Calls `analytics().setUserProperties({ userEmail, client, language, profile })` with the token's fields
+
+Required token fields: `sub`, `email`, `tcode`. Optional: `locale`, `profileName`.
+
+Must be called once at login before sending events.
+
+### `clearSession()`
+
+Clears user identity from Firebase and resets session state:
+- Calls `analytics().setUserId(null)`
+- Nullifies all user properties registered during the session (both from `setSession()` and `setUserProperties()`)
+- Resets session state while preserving `appVersion` and `isDebugMode`
+
+Must be called at logout.
+
+### `setUserProperties(properties)`
+
+Updates one or more Firebase user properties. Accepts a non-empty object of key/value pairs.
+
+```js
+await analytics.setUserProperties({ warehouseId: 'WH-001', zone: 'north' })
+```
+
+Properties registered via this method are automatically cleared on `clearSession()`.
+
+### `sendAction(actionName, screenName[, params])`
+
+Logs a Firebase `action` event.
+
+| Param | Type | Required | Description |
+| --- | --- | --- | --- |
+| `actionName` | `string` | Yes | Name of the action (formatted to lowercase with underscores) |
+| `screenName` | `string` | No | Screen where the action was triggered |
+| `params` | `object` | No | Extra params to include in the event |
+
+Returns `true` on success, `false` on error, `null` if session not ready or dev environment.
+
+### `sendCustomEvent({ eventName, params, extraParams })`
+
+Logs a custom Firebase event.
+
+| Param | Type | Required | Description |
+| --- | --- | --- | --- |
+| `eventName` | `string` | Yes | Name of the event |
+| `params` | `object` | No | Sent as individual Firebase event params |
+| `extraParams` | `object` | No | Serialized as a JSON string under the key `dataEvent` (avoids the 25-param Firebase limit) |
+
+Returns `true` on success, `false` on error, `null` if session not ready or dev environment.
+
+### `sendScreenTracking(screenName[, screenClass])`
+
+Logs a Firebase screen view event.
+
+| Param | Type | Required | Description |
+| --- | --- | --- | --- |
+| `screenName` | `string` | Yes | Name of the screen the user is viewing |
+| `screenClass` | `string` | No | Class associated with the screen |
+
+Returns `true` on success, `false` on error, `null` if session not ready or dev environment.
+
+---
+
+## Base event params
+
+Every event automatically includes:
+
+| Param | Source |
+| --- | --- |
+| `appVersion` | Constructor param |
+| `deviceId` | `@janiscommerce/app-device-info` |
+| `device` | `@janiscommerce/app-device-info` |
+| `osVersion` | `@janiscommerce/app-device-info` |
+| `connection` | `@janiscommerce/app-device-info` (fetched fresh per event) |
+
+User identity fields (`userEmail`, `client`, `language`, `profile`) are registered as Firebase user properties via `setSession()` — they do not travel as event params.
+
+---
+
+## Firebase setup
+
+### Android
+
+Add the Google Services plugin to `android/build.gradle`:
+
+```groovy
+dependencies {
+  classpath 'com.google.gms:google-services:4.3.15'
+}
+```
+
+Add to `android/app/build.gradle`:
+
+```groovy
+plugins {
+  id("com.google.gms.google-services")
+}
+
+dependencies {
+  implementation platform('com.google.firebase:firebase-bom:32.2.2')
+  implementation 'com.google.firebase:firebase-analytics'
+}
+```
+
+Clean the project:
+
+```sh
+cd android && ./gradlew clean && cd ..
 ```
 
 ---

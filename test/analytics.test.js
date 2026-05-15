@@ -110,6 +110,20 @@ describe('Analytics class', () => {
         });
       });
 
+      it('stores registered user properties in session', async () => {
+        getUserInfo.mockResolvedValueOnce(userInfoResponse);
+
+        const instance = new Analytics({appVersion: '1.0.0'});
+        await instance.setSession();
+
+        expect(instance.session.userProperties).toEqual({
+          userEmail: 'janis@janis.im',
+          client: 'validtcode',
+          language: 'en-US',
+          profile: 'Admin',
+        });
+      });
+
       describe('keeps canTrackEvents false when', () => {
         it('getUserInfo fails', async () => {
           getUserInfo.mockRejectedValueOnce(new Error('auth error'));
@@ -146,8 +160,19 @@ describe('Analytics class', () => {
         expect(firebaseInstance.setUserId).toHaveBeenCalledWith(null);
       });
 
-      it('calls setUserProperties with null values', async () => {
+      it('does not call setUserProperties when no properties were registered', async () => {
         const instance = new Analytics({appVersion: '1.0.0'});
+        await instance.clearSession();
+
+        expect(firebaseInstance.setUserProperties).not.toHaveBeenCalled();
+      });
+
+      it('nullifies all user properties registered via setSession', async () => {
+        getUserInfo.mockResolvedValueOnce(userInfoResponse);
+        const instance = new Analytics({appVersion: '1.0.0'});
+        await instance.setSession();
+        firebaseInstance.setUserProperties.mockClear();
+
         await instance.clearSession();
 
         expect(firebaseInstance.setUserProperties).toHaveBeenCalledWith({
@@ -156,6 +181,30 @@ describe('Analytics class', () => {
           language: null,
           profile: null,
         });
+      });
+
+      it('nullifies dynamic properties registered via setUserProperties', async () => {
+        const instance = new Analytics({appVersion: '1.0.0'});
+        await instance.setUserProperties({warehouseId: 'WH-001'});
+        firebaseInstance.setUserProperties.mockClear();
+
+        await instance.clearSession();
+
+        expect(firebaseInstance.setUserProperties).toHaveBeenCalledWith({
+          warehouseId: null,
+        });
+      });
+
+      it('preserves appVersion and isDebugMode after clearSession', async () => {
+        const instance = new Analytics({
+          appVersion: '2.5.0',
+          isDebugMode: true,
+        });
+        await instance.clearSession();
+
+        expect(instance.session.appVersion).toBe('2.5.0');
+        expect(instance.session.isDebugMode).toBe(true);
+        expect(instance.session.userProperties).toEqual({});
       });
 
       it('resets session to canTrackEvents false', async () => {
@@ -179,6 +228,54 @@ describe('Analytics class', () => {
 
         const instance = new Analytics({appVersion: '1.0.0'});
         await expect(instance.clearSession()).resolves.toBeUndefined();
+      });
+    });
+
+    describe('setUserProperties', () => {
+      it('calls setUserProperties with the given properties', async () => {
+        const instance = new Analytics({appVersion: '1.0.0'});
+        await instance.setUserProperties({
+          warehouseId: 'WH-001',
+          language: 'es-AR',
+        });
+
+        expect(firebaseInstance.setUserProperties).toHaveBeenCalledWith({
+          warehouseId: 'WH-001',
+          language: 'es-AR',
+        });
+      });
+
+      it('handles error silently when firebase call fails', async () => {
+        firebaseInstance.setUserProperties.mockRejectedValueOnce(
+          new Error('firebase error'),
+        );
+
+        const instance = new Analytics({appVersion: '1.0.0'});
+        await expect(
+          instance.setUserProperties({warehouseId: 'WH-001'}),
+        ).resolves.toBeUndefined();
+      });
+
+      it.each([[undefined], [null], [{}], ['string'], [123]])(
+        'handles error silently when properties is %p',
+        async (properties) => {
+          const instance = new Analytics({appVersion: '1.0.0'});
+          await expect(
+            instance.setUserProperties(properties),
+          ).resolves.toBeUndefined();
+          expect(firebaseInstance.setUserProperties).not.toHaveBeenCalled();
+        },
+      );
+
+      it('accumulates dynamic properties in session.userProperties', async () => {
+        const instance = new Analytics({appVersion: '1.0.0'});
+        await instance.setUserProperties({warehouseId: 'WH-001'});
+        await instance.setUserProperties({zone: 'north'});
+
+        expect(instance.session.userProperties).toEqual({
+          warehouseId: 'WH-001',
+          zone: 'north',
+        });
       });
     });
 
@@ -305,6 +402,26 @@ describe('Analytics class', () => {
         const result = await instance.sendAction('press_button', 'Home');
 
         expect(result).toBe(false);
+      });
+
+      it('reports error to crashlytics in prod when logEvent throws', async () => {
+        getUserInfo.mockResolvedValueOnce(userInfoResponse);
+        spyGetUniqueId.mockReturnValueOnce('device-123');
+        spyGetNetworkState.mockResolvedValueOnce({networkType: 'wifi'});
+        mockedDevEnv.mockReturnValueOnce(false);
+        const spyReportError = jest
+          .spyOn(utils, 'reportError')
+          .mockImplementation(() => null);
+        firebaseInstance.logEvent.mockRejectedValueOnce(
+          new Error('firebase error'),
+        );
+
+        const instance = new Analytics({appVersion: '1.0.0'});
+        await instance.setSession();
+        await instance.sendAction('press_button', 'Home');
+
+        expect(spyReportError).toHaveBeenCalledWith(expect.any(Error));
+        spyReportError.mockRestore();
       });
     });
 

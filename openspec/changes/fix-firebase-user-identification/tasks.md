@@ -16,14 +16,14 @@
 
 ## 4. Inicialización de session en el constructor
 
-- [x] 4.1 Agregar `this.session = { canTrackEvents: false, appVersion, isDebugMode }` en el constructor
+- [x] 4.1 Agregar `this.session = { canTrackEvents: false, appVersion, isDebugMode, userProperties: {} }` en el constructor
 - [x] 4.2 Validar que `appVersion` es requerido en el constructor — lanzar error si no se provee
 
 ## 5. Implementar clearSession()
 
 - [x] 5.1 Crear método `clearSession()` que llame `analytics().setUserId(null)`
-- [x] 5.2 Llamar `analytics().setUserProperties({ userEmail: null, client: null, language: null, profile: null })`
-- [x] 5.3 Resetear `this.session` a `{ canTrackEvents: false }`
+- [x] 5.2 Nullificar dinámicamente todas las user properties registradas en `this.session.userProperties` — no llamar `setUserProperties` si no hay keys
+- [x] 5.3 Resetear `this.session` al shape del constructor preservando `appVersion` e `isDebugMode`
 
 ## 6. Implementar #getBaseEventParams()
 
@@ -80,3 +80,14 @@
 - [x] 10.9 Actualizar tests de `sendAction()`, `sendCustomEvent()`, `sendScreenTracking()`
 - [x] 10.10 Actualizar tests de `validateData` y `normalizeParams` en utils
 - [x] 10.11 Eliminar tests de `sendUserInfo()` y `userInfoEvent`
+
+## 12. Post-beta.1: mejoras iterativas (beta.2 y beta.3)
+
+- [x] 12.1 Agregar prefix `[GA4]` a todos los logs de error del paquete
+- [x] 12.2 Eliminar `appName` de los event params — Firebase expone app identity nativamente
+- [x] 12.3 Hacer `locale` y `profileName` opcionales en `setSession()` — solo `sub`, `email`, `tcode` son requeridos
+- [x] 12.4 Agregar método `setUserProperties(properties)` para registrar/actualizar user properties dinámicas post-login
+- [x] 12.5 Integrar `@janiscommerce/app-crashlytics` como peerDependency obligatoria para reportar errores internos en producción — renombrar `showErrorInDebug` → `reportError`
+- [x] 12.6 `clearSession()` nullifica dinámicamente todas las user properties (incluye las de `setUserProperties()`)
+- [x] 12.7 `clearSession()` preserva `appVersion` e `isDebugMode` del constructor en `this.session`
+- [x] 12.8 `setSession()` y `setUserProperties()` acumulan keys registradas en `this.session.userProperties`

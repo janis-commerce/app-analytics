@@ -45,6 +45,8 @@ There is a new method `clearSession()` that clears the user identity from Fireba
 await analytics.clearSession()
 ```
 
+`clearSession()` automatically nullifies every user property registered during the session, including any extra ones set via `setUserProperties()`. You don't need to clear them manually.
+
 ---
 
 ### 3. `sendCustomEvent()` has a new signature
@@ -85,9 +87,20 @@ If you have dashboards, BigQuery queries or GA4 audiences that filter by `event_
 
 ---
 
+### 6. New required peer dependency: `@janiscommerce/app-crashlytics`
+
+The package now reports internal errors to Crashlytics in production. `@janiscommerce/app-crashlytics` is a required peer dependency — if the consumer app does not already have it installed, add it:
+
+```bash
+npm install @janiscommerce/app-crashlytics
+```
+
+---
+
 ## Migration checklist
 
 - [ ] Replace `analytics.sendUserInfo()` with `await analytics.setSession()` in the login flow
 - [ ] Add `await analytics.clearSession()` in the logout flow
 - [ ] Update `sendCustomEvent` calls to use the new object signature `{ eventName, params, extraParams }`
 - [ ] Update GA4/BigQuery dashboards that filter by `event_params.appName` to use `app_info.id` or the GA4 "App name" dimension instead
+- [ ] Install `@janiscommerce/app-crashlytics` if not already present in the consumer app
