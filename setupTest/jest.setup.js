@@ -10,6 +10,7 @@ jest.mock('@react-native-firebase/analytics', () => {
     logScreenView: jest.fn(),
     setUserId: jest.fn(),
     setUserProperties: jest.fn(),
+    resetAnalyticsData: jest.fn(),
   };
   return {
     __esModule: true,
@@ -21,6 +22,7 @@ jest.mock('@react-native-firebase/analytics', () => {
     setUserProperties: jest.fn((_, props) =>
       mockInstance.setUserProperties(props),
     ),
+    resetAnalyticsData: jest.fn(() => mockInstance.resetAnalyticsData()),
   };
 });
 

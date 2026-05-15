@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+## [4.0.0-beta.5]
+
+### Fixed
+
+- `clearSession()` now calls Firebase `resetAnalyticsData()` to clear the local `app_instance_id` and all analytics state on logout. This fixes a bug where events emitted right after a new login on the same device could show the previous user's identity (`user_id` and user properties).
+
 ## [4.0.0-beta.4]
 
 ### Changed
