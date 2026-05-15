@@ -11,7 +11,17 @@ jest.mock('@react-native-firebase/analytics', () => {
     setUserId: jest.fn(),
     setUserProperties: jest.fn(),
   };
-  return jest.fn().mockReturnValue(mockInstance);
+  return {
+    __esModule: true,
+    default: jest.fn().mockReturnValue(mockInstance),
+    getAnalytics: jest.fn().mockReturnValue(mockInstance),
+    logEvent: jest.fn((_, name, params) => mockInstance.logEvent(name, params)),
+    logScreenView: jest.fn((_, params) => mockInstance.logScreenView(params)),
+    setUserId: jest.fn((_, id) => mockInstance.setUserId(id)),
+    setUserProperties: jest.fn((_, props) =>
+      mockInstance.setUserProperties(props),
+    ),
+  };
 });
 
 jest.mock('@janiscommerce/oauth-native', () => ({
