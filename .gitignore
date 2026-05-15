@@ -67,3 +67,6 @@ types/
 # Bundle artifact
 *.jsbundle
 .bundle/
+
+# Claude Code worktrees
+.claude/worktrees/

@@ -40,6 +40,10 @@ module.exports = {
     'no-console': 'off',
     'no-restricted-exports': 'off',
     'default-param-last': 'off',
+    'import/no-extraneous-dependencies': [
+      'error',
+      {devDependencies: true, peerDependencies: true},
+    ],
   },
   overrides: [
     {
