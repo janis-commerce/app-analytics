@@ -16,6 +16,10 @@
 - `clearSession()` now nullifies all user properties registered during the session (both the ones set by `setSession()` and any extra ones set via `setUserProperties()`), instead of only the four hardcoded keys. This prevents dynamic properties (e.g. `warehouseId`) from leaking to the next user on the same device.
 - `clearSession()` now preserves `appVersion` and `isDebugMode` in the session state, so the same `Analytics` instance can be reused after logout/login without losing constructor-set data.
 
+### Removed
+
+- `build-docs` npm script, `jsdoc-to-markdown` and `jsdoc-babel` dev dependencies, `template-readme.hbs` and the `Build Readme` GitHub Action. The README is now maintained manually.
+
 ## [4.0.0-beta.2] - 2026-05-14
 
 ### Changed
