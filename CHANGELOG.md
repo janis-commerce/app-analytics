@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+## [4.0.0-beta.6]
+
+### Changed
+
+- Reverted the `resetAnalyticsData()` approach introduced in `4.0.0-beta.5`. `clearSession()` now explicitly calls `setUserId(null)` and nullifies every user property registered during the session, without touching Firebase's `app_instance_id`. This still prevents the next user's identity from being inherited on the same device, while avoiding side effects of resetting the analytics instance.
+
 ## [4.0.0-beta.5]
 
 ### Fixed

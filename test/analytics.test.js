@@ -153,11 +153,47 @@ describe('Analytics class', () => {
     });
 
     describe('clearSession', () => {
-      it('calls resetAnalyticsData to clear local state', async () => {
+      it('calls setUserId with null to clear identity', async () => {
         const instance = new Analytics({appVersion: '1.0.0'});
         await instance.clearSession();
 
-        expect(firebaseInstance.resetAnalyticsData).toHaveBeenCalled();
+        expect(firebaseInstance.setUserId).toHaveBeenCalledWith(null);
+      });
+
+      it('nullifies all registered user properties after setSession', async () => {
+        getUserInfo.mockResolvedValueOnce(userInfoResponse);
+
+        const instance = new Analytics({appVersion: '1.0.0'});
+        await instance.setSession();
+        await instance.clearSession();
+
+        expect(firebaseInstance.setUserProperties).toHaveBeenLastCalledWith({
+          userEmail: null,
+          client: null,
+          language: null,
+          profile: null,
+        });
+      });
+
+      it('nullifies dynamic properties added via setUserProperties', async () => {
+        getUserInfo.mockResolvedValueOnce(userInfoResponse);
+
+        const instance = new Analytics({appVersion: '1.0.0'});
+        await instance.setSession();
+        await instance.setUserProperties({warehouseId: 'WH-001'});
+        await instance.clearSession();
+
+        expect(firebaseInstance.setUserProperties).toHaveBeenLastCalledWith(
+          expect.objectContaining({warehouseId: null}),
+        );
+      });
+
+      it('does not call setUserProperties when there are no properties to clear', async () => {
+        const instance = new Analytics({appVersion: '1.0.0'});
+        await instance.clearSession();
+
+        expect(firebaseInstance.setUserId).toHaveBeenCalledWith(null);
+        expect(firebaseInstance.setUserProperties).not.toHaveBeenCalled();
       });
 
       it('preserves appVersion and isDebugMode after clearSession', async () => {
@@ -187,7 +223,7 @@ describe('Analytics class', () => {
       });
 
       it('handles error silently when firebase call fails', async () => {
-        firebaseInstance.resetAnalyticsData.mockRejectedValueOnce(
+        firebaseInstance.setUserId.mockRejectedValueOnce(
           new Error('firebase error'),
         );
 
