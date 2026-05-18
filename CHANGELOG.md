@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Changed
+
+- `setSession()` no longer wraps required user properties (`userEmail`, `client`) in defensive falsy guards. These fields are already validated before being mapped, so the guards were redundant. Optional properties (`language`, `profile`) keep their guards.
+
 ## [4.0.0-beta.6]
 
 ### Changed
