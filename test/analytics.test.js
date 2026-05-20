@@ -76,7 +76,7 @@ describe('Analytics class', () => {
           userEmail: 'janis@janis.im',
           client: 'validtcode',
           language: 'en-US',
-          profile: 'Admin',
+          userProfile: 'Admin',
         });
       });
 
@@ -120,7 +120,7 @@ describe('Analytics class', () => {
           userEmail: 'janis@janis.im',
           client: 'validtcode',
           language: 'en-US',
-          profile: 'Admin',
+          userProfile: 'Admin',
         });
       });
 
@@ -171,7 +171,7 @@ describe('Analytics class', () => {
           userEmail: null,
           client: null,
           language: null,
-          profile: null,
+          userProfile: null,
         });
       });
 
