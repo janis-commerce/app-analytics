@@ -87,7 +87,7 @@ Creates a new Analytics instance. Throws if `appVersion` is not provided or is n
 
 Fetches user info from the OAuth token and registers identity in Firebase:
 - Calls `analytics().setUserId(sub)` with the token's `sub` field
-- Calls `analytics().setUserProperties({ userEmail, client, language, profile })` with the token's fields
+- Calls `analytics().setUserProperties({ userEmail, client, language, userProfile })` with the token's fields
 
 Required token fields: `sub`, `email`, `tcode`. Optional: `locale`, `profileName`.
 
@@ -161,7 +161,7 @@ Every event automatically includes:
 | `osVersion` | `@janiscommerce/app-device-info` |
 | `connection` | `@janiscommerce/app-device-info` (fetched fresh per event) |
 
-User identity fields (`userEmail`, `client`, `language`, `profile`) are registered as Firebase user properties via `setSession()` — they do not travel as event params.
+User identity fields (`userEmail`, `client`, `language`, `userProfile`) are registered as Firebase user properties via `setSession()` — they do not travel as event params.
 
 ---
 
