@@ -429,7 +429,7 @@ describe('Analytics class', () => {
     describe('sendCustomEvent', () => {
       it('returns null when session is not ready', async () => {
         const instance = new Analytics({appVersion: '1.0.0'});
-        const result = await instance.sendCustomEvent();
+        const result = await instance.sendCustomEvent('custom_event');
 
         expect(result).toBeNull();
         expect(firebaseInstance.logEvent).not.toHaveBeenCalled();
@@ -442,9 +442,7 @@ describe('Analytics class', () => {
 
         const instance = new Analytics({appVersion: '1.0.0'});
         await instance.setSession();
-        const result = await instance.sendCustomEvent({
-          eventName: 'custom_event',
-        });
+        const result = await instance.sendCustomEvent('custom_event');
 
         expect(result).toBeNull();
         expect(instance.session.canTrackEvents).toBe(false);
@@ -457,9 +455,7 @@ describe('Analytics class', () => {
 
         const instance = new Analytics({appVersion: '1.0.0'});
         await instance.setSession();
-        const result = await instance.sendCustomEvent({
-          eventName: 'custom_event',
-        });
+        const result = await instance.sendCustomEvent('custom_event');
 
         expect(result).toBeNull();
         expect(firebaseInstance.logEvent).not.toHaveBeenCalled();
@@ -473,36 +469,14 @@ describe('Analytics class', () => {
 
         const instance = new Analytics({appVersion: '1.0.0'});
         await instance.setSession();
-        const result = await instance.sendCustomEvent({
-          eventName: 'order_created',
-          params: {orderId: '123'},
+        const result = await instance.sendCustomEvent('order_created', {
+          orderId: '123',
         });
 
         expect(result).toBe(true);
         expect(firebaseInstance.logEvent).toHaveBeenCalledWith(
           'order_created',
           expect.objectContaining({orderId: '123'}),
-        );
-      });
-
-      it('serializes extraParams as dataEvent JSON string', async () => {
-        getUserInfo.mockResolvedValueOnce(userInfoResponse);
-        spyGetUniqueId.mockReturnValueOnce('device-123');
-        spyGetNetworkState.mockResolvedValueOnce({networkType: 'wifi'});
-        mockedDevEnv.mockReturnValueOnce(false);
-
-        const instance = new Analytics({appVersion: '1.0.0'});
-        await instance.setSession();
-        await instance.sendCustomEvent({
-          eventName: 'order_created',
-          params: {orderId: '123'},
-          extraParams: {note: 'fragile'},
-        });
-
-        const calledWith = firebaseInstance.logEvent.mock.calls[0][1];
-        expect(calledWith).toHaveProperty(
-          'dataEvent',
-          JSON.stringify({note: 'fragile'}),
         );
       });
 
@@ -516,10 +490,7 @@ describe('Analytics class', () => {
           isDebugMode: true,
         });
         await instance.setSession();
-        await instance.sendCustomEvent({
-          eventName: 'custom_event',
-          params: {rol: 'dev'},
-        });
+        await instance.sendCustomEvent('custom_event', {rol: 'dev'});
 
         expect(firebaseInstance.logEvent).toHaveBeenCalled();
       });
@@ -532,10 +503,7 @@ describe('Analytics class', () => {
 
         const instance = new Analytics({appVersion: '1.0.0'});
         await instance.setSession();
-        await instance.sendCustomEvent({
-          eventName: 'custom_event',
-          params: {rol: 'dev'},
-        });
+        await instance.sendCustomEvent('custom_event', {rol: 'dev'});
 
         const calledWith = firebaseInstance.logEvent.mock.calls[0][1];
         expect(calledWith).not.toHaveProperty('userEmail');
@@ -556,9 +524,7 @@ describe('Analytics class', () => {
 
         const instance = new Analytics({appVersion: '1.0.0'});
         await instance.setSession();
-        const result = await instance.sendCustomEvent({
-          eventName: 'order_created',
-        });
+        const result = await instance.sendCustomEvent('order_created');
 
         expect(result).toBe(false);
       });

@@ -48,11 +48,7 @@ await analytics.sendAction('button_press', 'Home')
 await analytics.sendAction('button_press', 'Home', { itemId: '123' })
 
 // Log a custom event
-await analytics.sendCustomEvent({
-  eventName: 'order_created',
-  params: { orderId: '123' },
-  extraParams: { note: 'fragile' }, // serialized as dataEvent JSON string
-})
+await analytics.sendCustomEvent('order_created', { orderId: '123' })
 
 // Log a screen view
 await analytics.sendScreenTracking('Home', 'HomeScreen')
@@ -124,7 +120,7 @@ Logs a Firebase `action` event.
 
 Returns `true` on success, `false` on error, `null` if session not ready or dev environment.
 
-### `sendCustomEvent({ eventName, params, extraParams })`
+### `sendCustomEvent(eventName[, params])`
 
 Logs a custom Firebase event.
 
@@ -132,7 +128,6 @@ Logs a custom Firebase event.
 | --- | --- | --- | --- |
 | `eventName` | `string` | Yes | Name of the event |
 | `params` | `object` | No | Sent as individual Firebase event params |
-| `extraParams` | `object` | No | Serialized as a JSON string under the key `dataEvent` (avoids the 25-param Firebase limit) |
 
 Returns `true` on success, `false` on error, `null` if session not ready or dev environment.
 
