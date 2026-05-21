@@ -23,6 +23,7 @@ describe('Analytics class', () => {
 
   afterEach(() => {
     jest.clearAllMocks();
+    spyGetNetworkState.mockReset();
   });
 
   describe('constructor', () => {
@@ -41,9 +42,9 @@ describe('Analytics class', () => {
       );
     });
 
-    it('initializes session with canTrackEvents false', () => {
+    it('initializes session with isReady false', () => {
       const instance = new Analytics({appVersion: '1.0.0'});
-      expect(instance.session.canTrackEvents).toBe(false);
+      expect(instance.session.isReady).toBe(false);
       expect(instance.session.appVersion).toBe('1.0.0');
     });
 
@@ -80,7 +81,7 @@ describe('Analytics class', () => {
         });
       });
 
-      it('sets canTrackEvents to true on success', async () => {
+      it('sets isReady to true on success', async () => {
         getUserInfo.mockResolvedValueOnce(userInfoResponse);
         spyGetUniqueId.mockReturnValueOnce('device-123');
         spyGetDeviceModel.mockReturnValueOnce('Pixel 6');
@@ -89,7 +90,7 @@ describe('Analytics class', () => {
         const instance = new Analytics({appVersion: '1.0.0'});
         await instance.setSession();
 
-        expect(instance.session.canTrackEvents).toBe(true);
+        expect(instance.session.isReady).toBe(true);
       });
 
       it('stores device data and appVersion in session', async () => {
@@ -102,7 +103,7 @@ describe('Analytics class', () => {
         await instance.setSession();
 
         expect(instance.session).toMatchObject({
-          canTrackEvents: true,
+          isReady: true,
           appVersion: '1.0.0',
           deviceId: 'device-123',
           device: 'Pixel 6',
@@ -124,14 +125,14 @@ describe('Analytics class', () => {
         });
       });
 
-      describe('keeps canTrackEvents false when', () => {
+      describe('keeps isReady false when', () => {
         it('getUserInfo fails', async () => {
           getUserInfo.mockRejectedValueOnce(new Error('auth error'));
 
           const instance = new Analytics({appVersion: '1.0.0'});
           await instance.setSession();
 
-          expect(instance.session.canTrackEvents).toBe(false);
+          expect(instance.session.isReady).toBe(false);
           expect(firebaseInstance.setUserId).not.toHaveBeenCalled();
           expect(firebaseInstance.setUserProperties).not.toHaveBeenCalled();
         });
@@ -145,7 +146,7 @@ describe('Analytics class', () => {
           const instance = new Analytics({appVersion: '1.0.0'});
           await instance.setSession();
 
-          expect(instance.session.canTrackEvents).toBe(false);
+          expect(instance.session.isReady).toBe(false);
           expect(firebaseInstance.setUserId).not.toHaveBeenCalled();
           expect(firebaseInstance.setUserProperties).not.toHaveBeenCalled();
         });
@@ -208,7 +209,7 @@ describe('Analytics class', () => {
         expect(instance.session.userProperties).toEqual({});
       });
 
-      it('resets session to canTrackEvents false', async () => {
+      it('resets session to isReady false', async () => {
         getUserInfo.mockResolvedValueOnce(userInfoResponse);
         spyGetUniqueId.mockReturnValueOnce('device-123');
         spyGetDeviceModel.mockReturnValueOnce('Pixel 6');
@@ -218,7 +219,6 @@ describe('Analytics class', () => {
         await instance.setSession();
         await instance.clearSession();
 
-        expect(instance.session.canTrackEvents).toBe(false);
         expect(instance.session.isReady).toBe(false);
       });
 
@@ -289,35 +289,23 @@ describe('Analytics class', () => {
         expect(firebaseInstance.logEvent).not.toHaveBeenCalled();
       });
 
-      it('returns null when getNetworkState fails', async () => {
+      it('sends event with empty connection when getNetworkState fails', async () => {
         getUserInfo.mockResolvedValueOnce(userInfoResponse);
         spyGetUniqueId.mockReturnValueOnce('device-123');
         spyGetNetworkState.mockRejectedValueOnce(new Error('network error'));
 
-        const instance = new Analytics({appVersion: '1.0.0'});
+        const instance = new Analytics({
+          appVersion: '1.0.0',
+          isDebugMode: true,
+        });
         await instance.setSession();
         const result = await instance.sendAction('press_button', 'Home');
 
-        expect(result).toBeNull();
-        expect(instance.session.canTrackEvents).toBe(false);
-      });
-
-      it('restores canTrackEvents to true when getNetworkState recovers', async () => {
-        getUserInfo.mockResolvedValueOnce(userInfoResponse);
-        spyGetUniqueId.mockReturnValueOnce('device-123');
-        spyGetNetworkState
-          .mockRejectedValueOnce(new Error('network error'))
-          .mockResolvedValueOnce({networkType: 'wifi'});
-        mockedDevEnv.mockReturnValueOnce(false);
-
-        const instance = new Analytics({appVersion: '1.0.0'});
-        await instance.setSession();
-
-        await instance.sendAction('press_button', 'Home');
-        expect(instance.session.canTrackEvents).toBe(false);
-
-        await instance.sendAction('press_button', 'Home');
-        expect(instance.session.canTrackEvents).toBe(true);
+        expect(result).toBe(true);
+        expect(firebaseInstance.logEvent).toHaveBeenCalledWith(
+          'action',
+          expect.objectContaining({connection: ''}),
+        );
       });
 
       it('returns null in dev environment without debug mode', async () => {
@@ -435,17 +423,23 @@ describe('Analytics class', () => {
         expect(firebaseInstance.logEvent).not.toHaveBeenCalled();
       });
 
-      it('returns null when getNetworkState fails', async () => {
+      it('sends event with empty connection when getNetworkState fails', async () => {
         getUserInfo.mockResolvedValueOnce(userInfoResponse);
         spyGetUniqueId.mockReturnValueOnce('device-123');
         spyGetNetworkState.mockRejectedValueOnce(new Error('network error'));
 
-        const instance = new Analytics({appVersion: '1.0.0'});
+        const instance = new Analytics({
+          appVersion: '1.0.0',
+          isDebugMode: true,
+        });
         await instance.setSession();
         const result = await instance.sendCustomEvent('custom_event');
 
-        expect(result).toBeNull();
-        expect(instance.session.canTrackEvents).toBe(false);
+        expect(result).toBe(true);
+        expect(firebaseInstance.logEvent).toHaveBeenCalledWith(
+          'custom_event',
+          expect.objectContaining({connection: ''}),
+        );
       });
 
       it('returns null in dev environment without debug mode', async () => {
@@ -539,17 +533,22 @@ describe('Analytics class', () => {
         expect(firebaseInstance.logScreenView).not.toHaveBeenCalled();
       });
 
-      it('returns null when getNetworkState fails', async () => {
+      it('sends event with empty connection when getNetworkState fails', async () => {
         getUserInfo.mockResolvedValueOnce(userInfoResponse);
         spyGetUniqueId.mockReturnValueOnce('device-123');
         spyGetNetworkState.mockRejectedValueOnce(new Error('network error'));
 
-        const instance = new Analytics({appVersion: '1.0.0'});
+        const instance = new Analytics({
+          appVersion: '1.0.0',
+          isDebugMode: true,
+        });
         await instance.setSession();
         const result = await instance.sendScreenTracking('Home', 'HomeClass');
 
-        expect(result).toBeNull();
-        expect(instance.session.canTrackEvents).toBe(false);
+        expect(result).toBe(true);
+        expect(firebaseInstance.logScreenView).toHaveBeenCalledWith(
+          expect.objectContaining({connection: ''}),
+        );
       });
 
       it('returns null in dev environment without debug mode', async () => {
