@@ -2,70 +2,31 @@
 
 ## [Unreleased]
 
-### Changed
-
-- `setSession()` no longer wraps required user properties (`userEmail`, `client`) in defensive falsy guards. These fields are already validated before being mapped, so the guards were redundant. Optional properties (`language`, `profile`) keep their guards.
-
-## [4.0.0-beta.6]
-
-### Changed
-
-- Reverted the `resetAnalyticsData()` approach introduced in `4.0.0-beta.5`. `clearSession()` now explicitly calls `setUserId(null)` and nullifies every user property registered during the session, without touching Firebase's `app_instance_id`. This still prevents the next user's identity from being inherited on the same device, while avoiding side effects of resetting the analytics instance.
-
-## [4.0.0-beta.5]
-
-### Fixed
-
-- `clearSession()` now calls Firebase `resetAnalyticsData()` to clear the local `app_instance_id` and all analytics state on logout. This fixes a bug where events emitted right after a new login on the same device could show the previous user's identity (`user_id` and user properties).
-
-## [4.0.0-beta.4]
-
-### Changed
-
-- Migrated all Firebase Analytics calls to the modular API (`getAnalytics`, `logEvent`, `setUserId`, `setUserProperties`, `logScreenView` from `@react-native-firebase/analytics`). This eliminates the deprecation warnings about the namespaced API that appeared in dev builds.
-
-## [4.0.0-beta.3]
-
-### Added
-
-- `setUserProperties(properties)` — updates one or more Firebase user properties after login. Use it for dynamic user attributes that change during the session (e.g. `warehouseId`, `language`).
-- Internal package errors are now reported to Crashlytics via `@janiscommerce/app-crashlytics`. Previously these errors were only logged to the console in dev and silently swallowed in production. They now surface in the Firebase Crashlytics console under non-fatal errors prefixed with `[GA4]`.
-- `@janiscommerce/app-crashlytics` is now a required peer dependency (`>=2.3.0-beta.0`).
-
-### Changed
-
-- `locale` and `profileName` are no longer required fields in `setSession()`. Only `sub`, `email` and `tcode` are required. If `locale` or `profileName` are absent from the OAuth token, `setSession()` still succeeds and the corresponding user properties are simply not registered in Firebase.
-- `clearSession()` now nullifies all user properties registered during the session (both the ones set by `setSession()` and any extra ones set via `setUserProperties()`), instead of only the four hardcoded keys. This prevents dynamic properties (e.g. `warehouseId`) from leaking to the next user on the same device.
-- `clearSession()` now preserves `appVersion` and `isDebugMode` in the session state, so the same `Analytics` instance can be reused after logout/login without losing constructor-set data.
-
-### Removed
-
-- `build-docs` npm script, `jsdoc-to-markdown` and `jsdoc-babel` dev dependencies, `template-readme.hbs` and the `Build Readme` GitHub Action. The README is now maintained manually.
-
-## [4.0.0-beta.2] - 2026-05-14
-
-### Changed
-
-- Error logs emitted by the package are now prefixed with `[GA4]` to distinguish them from consumer app logs.
-
-### Removed
-
-- `appName` is no longer included as an event param in `sendAction`, `sendCustomEvent` or `sendScreenTracking`. Firebase Analytics already exposes app identity natively (`app_info.id` and `app_info.firebase_app_id` in BigQuery export, "App name" dimension in GA4). Consumers that filter by `event_params.appName` in GA4 or BigQuery must switch to `app_info.id` or the GA4 "App name" dimension instead.
-
-## [4.0.0-beta.1] - 2026-05-14
-
 ### Breaking Changes
 
-- User identity fields (`userEmail`, `userId`, `client`, `language`, `userProfile`) no longer travel as params in Firebase events. They are now registered once per session via Firebase session APIs (`setUserId`, `setUserProperties`).
+- User identity fields (`userEmail`, `userId`, `client`, `language`, `userProfile`) no longer travel as params in Firebase events. They are now registered once per session via Firebase user properties (`setUserId`, `setUserProperties`).
 - `initialize()` removed. Replace with `setSession()` at login.
 - `sendUserInfo()` removed. Replace with `setSession()` at login.
-- `sendCustomEvent()` signature changed from positional arguments to a single object `{ eventName, params, extraParams }`.
+- `sendCustomEvent()` signature changed: now takes positional arguments `(eventName, params)` instead of a single object. The `extraParams`/`dataEvent` serialization has been removed — all params are sent individually to Firebase.
 - `Analytics` class now exported directly from `lib/index.js` (previously re-exported from `lib/analytics.js`).
 
 ### Added
 
 - `setSession()` — fetches user info from OAuth token and registers identity in Firebase via `setUserId` and `setUserProperties`. Must be called once at login.
 - `clearSession()` — clears user identity from Firebase and resets session state. Must be called at logout.
+- `setUserProperties(properties)` — updates one or more Firebase user properties after login. Use it for dynamic user attributes that change during the session (e.g. `warehouseId`, `language`).
+- Internal package errors are now reported to Crashlytics via `@janiscommerce/app-crashlytics`. They now surface in the Firebase Crashlytics console under non-fatal errors prefixed with `[GA4]`.
+- `@janiscommerce/app-crashlytics` is now a required peer dependency (`>=2.3.0-beta.0`).
+
+### Changed
+
+- Migrated all Firebase Analytics calls to the modular API (`getAnalytics`, `logEvent`, `setUserId`, `setUserProperties`, `logScreenView` from `@react-native-firebase/analytics`). This eliminates deprecation warnings about the namespaced API.
+- `locale` and `profileName` are no longer required fields in `setSession()`. Only `sub`, `email` and `tcode` are required.
+- `clearSession()` now explicitly calls `setUserId(null)` and nullifies every user property registered during the session (including any set via `setUserProperties()`). This prevents identity from leaking to the next user on the same device.
+- `clearSession()` preserves `appVersion` and `isDebugMode` in session state so the same instance can be reused after logout/login.
+- Error logs emitted by the package are prefixed with `[GA4]` to distinguish them from consumer app logs.
+- `userProfile` renamed from `profile` to align with the Firebase user property key.
+- If `getNetworkState()` fails, events are still sent with `connection: ''` instead of being aborted.
 
 ### Removed
 
@@ -73,6 +34,9 @@
 - User identity fields from all event params (`userEmail`, `userId`, `client`, `language`, `userProfile`).
 - `formatBasicData()` / `getEventBaseData()` utils.
 - `requiredInitialData` and `includesAllProperties` helpers.
+- `appName` is no longer included as an event param. Firebase Analytics exposes app identity natively (`app_info.id` in BigQuery, "App name" dimension in GA4).
+- `build-docs` npm script, `jsdoc-to-markdown` and `jsdoc-babel` dev dependencies, `template-readme.hbs` and the `Build Readme` GitHub Action. The README is now maintained manually.
+- `extraParams`/`dataEvent` serialization from `sendCustomEvent`. All params are now sent individually.
 
 ## [3.1.0] - 2026-05-13
 
