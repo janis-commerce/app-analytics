@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- `setSession()` now preserves dynamic user properties previously set via `setUserProperties()` instead of overwriting them.
+
+## [4.0.0] - 2026-05-22
+
 ### Breaking Changes
 
 - User identity fields (`userEmail`, `userId`, `client`, `language`, `userProfile`) no longer travel as params in Firebase events. They are now registered once per session via Firebase user properties (`setUserId`, `setUserProperties`).

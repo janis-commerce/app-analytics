@@ -125,6 +125,22 @@ describe('Analytics class', () => {
         });
       });
 
+      it('preserves dynamic user properties set before setSession', async () => {
+        getUserInfo.mockResolvedValueOnce(userInfoResponse);
+
+        const instance = new Analytics({appVersion: '1.0.0'});
+        await instance.setUserProperties({warehouseId: 'WH-001'});
+        await instance.setSession();
+
+        expect(instance.session.userProperties).toEqual({
+          warehouseId: 'WH-001',
+          userEmail: 'janis@janis.im',
+          client: 'validtcode',
+          language: 'en-US',
+          userProfile: 'Admin',
+        });
+      });
+
       describe('keeps isReady false when', () => {
         it('getUserInfo fails', async () => {
           getUserInfo.mockRejectedValueOnce(new Error('auth error'));
