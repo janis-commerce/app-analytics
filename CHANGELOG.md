@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [4.0.1] - 2026-05-26
+
 ### Fixed
 
 - `setSession()` now preserves dynamic user properties previously set via `setUserProperties()` instead of overwriting them.
