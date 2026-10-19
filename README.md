@@ -59,8 +59,8 @@ await analytics.sendScreenTracking('Home', 'HomeScreen')
 Use `setUserProperties` to register or update dynamic user attributes after login (e.g. when a warehouse operator selects a depot).
 
 ```js
-await analytics.setUserProperties({ warehouseId: 'WH-001' })
-await analytics.setUserProperties({ language: 'es-AR' })
+await analytics.setUserProperties({ [COMMON_USER_PROPERTY_NAMES.WAREHOUSE_ID]: 'WH-001' })
+await analytics.setUserProperties({ [COMMON_USER_PROPERTY_NAMES.LANGUAGE]: 'es-AR' })
 ```
 
 ### 5. Clear user identity at logout
@@ -69,6 +69,47 @@ Call `clearSession()` when the user logs out. It clears user identity from Fireb
 
 ```js
 await analytics.clearSession()
+```
+
+---
+
+## Shared constants
+
+Action names and user properties common to all Janis apps. An action name is the `actionName` param of the `action` event that `sendAction` logs, not a GA4 event name. Use them instead of local strings so the same action reaches GA4 with the same value from every app.
+
+| `COMMON_ACTION_NAMES` key         | Value                             |
+| --------------------------------- | --------------------------------- |
+| `USER_LOGOUT`                     | `user_logout`                     |
+| `USER_LOGOUT_BY_TOKEN_EXPIRATION` | `user_logout_by_token_expiration` |
+| `HOME_PRESSED`                    | `home_pressed`                    |
+| `NOTIFICATIONS_MENU_PRESSED`      | `notifications_menu_pressed`      |
+| `USER_MENU_PRESSED`               | `user_menu_pressed`               |
+| `WAREHOUSES_MENU_PRESSED`         | `warehouses_menu_pressed`         |
+| `CONFIGURATION_MENU_PRESSED`      | `configuration_menu_pressed`      |
+| `LANGUAGES_MENU_PRESSED`          | `languages_menu_pressed`          |
+| `CLEAR_DATA_PRESSED`              | `clear_data_pressed`              |
+| `CLEAR_DATA_CONFIRMED`            | `clear_data_confirmed`            |
+| `CLEAR_DATA_CANCELED`             | `clear_data_canceled`             |
+| `LANGUAGE_CHANGED`                | `language_changed`                |
+| `WAREHOUSE_CHANGED`               | `warehouse_changed`               |
+
+| `COMMON_USER_PROPERTY_NAMES` key | Value         |
+| -------------------------------- | ------------- |
+| `LANGUAGE`                       | `language`    |
+| `WAREHOUSE_ID`                   | `warehouseId` |
+
+Merge them into the app's own `ACTION_NAMES` object, so the rest of the app imports a single object:
+
+```js
+import {COMMON_ACTION_NAMES, COMMON_USER_PROPERTY_NAMES} from '@janiscommerce/app-analytics'
+
+const ACTION_NAMES = {
+  FINISH_SESSION: 'finish_session',
+  ...COMMON_ACTION_NAMES,
+}
+
+await analytics.sendAction(ACTION_NAMES.USER_LOGOUT, screenName)
+await analytics.setUserProperties({ [COMMON_USER_PROPERTY_NAMES.LANGUAGE]: 'es-AR' })
 ```
 
 ---
