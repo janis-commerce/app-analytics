@@ -22,7 +22,7 @@ npm install @janiscommerce/app-analytics
 ### 1. Create an instance
 
 ```js
-import Analytics from '@janiscommerce/app-analytics'
+import Analytics, {COMMON_USER_PROPERTY_NAMES} from '@janiscommerce/app-analytics'
 
 const analytics = new Analytics({ appVersion: '1.0.0' })
 ```
