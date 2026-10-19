@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+## [4.1.0] - 2026-10-19
+
+### Added
+
+- `COMMON_ACTION_NAMES` and `COMMON_USER_PROPERTY_NAMES` are now exported with the action names (the `actionName` of the `action` event) and user property names shared by Janis apps, so every app reports the same action and user property to GA4 under the same name and they can be compared across apps.
+
 ## [4.0.1] - 2026-05-26
 
 ### Fixed
